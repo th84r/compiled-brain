@@ -13,11 +13,11 @@ One router page per role. See `hats/`.
 
 ## Cases
 
-Active pieces of work with a counterparty. See `cases/`.
+Bounded pieces of work with a start and an end, usually involving other people. See `cases/`.
 
 ## Projects
 
-Ongoing work without an external counterparty. See `projects/`.
+Ongoing work without a fixed end, usually your own. See `projects/`.
 
 ## People
 

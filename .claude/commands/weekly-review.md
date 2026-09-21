@@ -22,7 +22,7 @@ Read `wiki/status.md`. Never build this review from memory of what was happening
 
 ## 3. Weight by who is chasing
 
-Work with an external counterparty pushes on its own. Work where nobody is chasing moves only when the owner pushes, so it falls out of sight first. Treat a passed date in that group as more serious than one on work that chases itself.
+Work where someone else is waiting on you pushes on its own. Work where nobody is chasing moves only when the owner pushes, so it falls out of sight first. Treat a passed date in that group as more serious than one on work that chases itself.
 
 ## 4. Recommend
 

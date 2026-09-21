@@ -17,7 +17,7 @@ Two reasons, and the second is the one people miss.
 
 The obvious one is quality. Machine prose is recognisable and it reads as unconsidered.
 
-The less obvious one is credibility. If a document that leaves your organisation reads as generated, a counterparty will attack how it was made rather than what it says. That is a cheap attack and it works, because it moves the argument away from your evidence. Whatever your policy on using models, the writing should not be the thing that raises the question.
+The less obvious one is credibility. If a document that leaves your organisation reads as generated, anyone with a reason to doubt it will attack how it was made rather than what it says. That is a cheap attack and it works, because it moves the argument away from your evidence. Whatever your policy on using models, the writing should not be the thing that raises the question.
 
 ## Mechanics
 

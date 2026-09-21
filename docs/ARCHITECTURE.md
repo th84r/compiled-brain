@@ -36,7 +36,7 @@ New information is appended below old information and both sit there with equal 
 
 **Counter.** Step 5 of `/ingest` forces an explicit decision for every fact that touches something existing: add, update, or supersede. A superseded fact keeps its date and stays on the page.
 
-That last part matters more than it looks. Keeping the old value is what lets you answer "what was the price at the last negotiation", which is often the question that decides the next one.
+That last part matters more than it looks. Keeping the old value is what lets you answer "what was it before the change", which is often the question that decides what happens next.
 
 ### Inference hardens into fact
 
@@ -66,7 +66,7 @@ The rule for deciding is simple. "How does this person work", "who is this perso
 
 A `hat` field rather than one repository per role.
 
-Separate libraries look tidier and are worse. The value in a cross-role library is exactly the connections that cross roles: the counterparty who appears in two negotiations, the market data that informs three cases, the method developed in one context that applies in another. Split the library and those connections stop existing.
+Separate libraries look tidier and are worse. The value in a cross-role library is exactly the connections that cross roles: the person who appears in two pieces of work, the reference data that informs three cases, the method developed in one context that applies in another. Split the library and those connections stop existing.
 
 The `hat` field gives you the separation where you need it, which is filtering and routing, without giving up the cross-links.
 
@@ -103,6 +103,8 @@ The log is append-only and grows without bound, which makes it a poor retrieval 
 **No sync service.** Git is the sync. If you need it on two machines, push it somewhere private.
 
 ## Adapting it
+
+`/onboard` handles the changing. It interviews the owner and rewrites the parts below. This section says what they are and why, for anyone doing it by hand or checking what the onboarding did.
 
 Three things almost always need changing, and one thing almost never should.
 

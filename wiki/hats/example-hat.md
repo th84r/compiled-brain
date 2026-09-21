@@ -23,7 +23,7 @@ One or two sentences. What you do in this context and who you do it for.
 
 Who decides, who executes, who to avoid surprising.
 
-## Standing agreements and terms
+## Standing arrangements and terms
 
 The things that are true across every case in this role.
 

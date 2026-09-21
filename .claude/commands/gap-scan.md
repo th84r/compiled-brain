@@ -12,7 +12,7 @@ One active case, usually the one with the nearest `next_action_date`. Read it fu
 
 Put yourself in the position of someone about to walk into a meeting on this case. What would they be asked that this page does not answer?
 
-Useful directions: the counterparty's position and its reasoning, the numbers behind a claim, what comparable cases settled at, who decides on the other side, what happens if no agreement is reached, what the deadline actually is.
+Useful directions: what each person involved wants and why, the numbers behind a claim, what happened in comparable situations, who actually decides, what happens if nothing is done, what the real deadline is.
 
 ## 3. Sort the gaps
 

@@ -2,7 +2,7 @@
 
 This file is read at the start of every session. It is the contract between you and the agent. Edit it to fit your work, because a template that is never adapted is a template that gets ignored.
 
-Everything in `<angle brackets>` is a placeholder you replace.
+Everything in `<angle brackets>` is a placeholder. The fastest way to replace all of them is to say "set this up for me", which runs `/onboard`. It interviews you and shapes this file, the hats, the example and the voice rules to your work. See `docs/ONBOARDING.md`.
 
 ---
 
@@ -10,7 +10,7 @@ Everything in `<angle brackets>` is a placeholder you replace.
 
 A self-developing knowledge base covering <your name>'s work across <domain>. It grows sharper over time as raw material is fed in and compiled into structured knowledge.
 
-**Hats.** You wear several. Each one is a context with its own counterparties, deadlines and tempo. The library serves all of them from one place, and the `hat` field in frontmatter is what keeps them separable without splitting the library into silos.
+**Hats.** You wear several. Each one is a context with its own people, deadlines and tempo. The library serves all of them from one place, and the `hat` field in frontmatter is what keeps them separable without splitting the library into silos.
 
 - `<hat-one>`, <one line: what this role is>
 - `<hat-two>`, <one line>
@@ -19,7 +19,7 @@ A self-developing knowledge base covering <your name>'s work across <domain>. It
 
 Write hat values in lowercase. `wiki/hats/` holds one router page per hat, which is the entry point when you step into that role.
 
-**A note worth keeping.** If some of your hats have external counterparties who chase you and some do not, say so here explicitly. The ones nobody chases are the ones that fall out of sight first, and they are usually the ones with hard deadlines and no reminder attached. Treat a passed `next_action_date` in that group as more serious than one where a counterparty is already chasing.
+**A note worth keeping.** If some of your hats have someone external who chases you and some do not, say so here explicitly. The ones nobody chases are the ones that fall out of sight first, and they are usually the ones with hard deadlines and no reminder attached. Treat a passed `next_action_date` in that group as more serious than one someone is already chasing.
 
 ---
 
@@ -93,7 +93,7 @@ The self-reinforcing loop (`/loop`, driver in `.claude/loop.md`) runs the operat
 
 Adapt this section to your work. It is the main defence against a library that fills with noise.
 
-**Belongs:** strategic decisions and their reasoning, meeting outcomes and counterparty positions, price levels and contract terms and benchmarks, market developments and legal changes, data findings and methodology with wider value, people's roles.
+**Belongs:** decisions and the reasoning behind them, outcomes of meetings and what the people involved want, figures and terms you will be asked about again, developments in your field that change what is true, findings and methods with value beyond the case they came from, people's roles.
 
 **Does not belong:** ordinary correspondence without substance, raw material without analysis, active correspondence still in flow (keep as `inbox/processed` until settled), anything already in agent memory.
 
@@ -110,7 +110,7 @@ type: case | project | person | reference | workflow
 status: active | waiting | on_hold | closed
 confidence: verified | tentative     # how much may be asserted
 hat: <hat-one> | <hat-two> | bridging
-counterpart: name of counterparty if a case
+counterpart: the other party, if there is one
 value: economic value if relevant
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
@@ -126,7 +126,7 @@ sources: [inbox/processed/2026-04/x.pdf]
 
 **TL;DR line.** Every page opens with one line summarising the core, so relevance can be triaged before reading the whole page.
 
-**Facts that change get invalidated rather than overwritten.** When a price, term, position or role changes, mark the old one as superseded with a date instead of deleting it. For example, "12.25m/year (to 2026), then 13.0m/year (from 2027, source X)". That way you can still answer "what was the price at the last negotiation". Put a `review` date on volatile, frequently-read facts so the linter can flag them before they become confidently wrong.
+**Facts that change get invalidated rather than overwritten.** When a price, term, position or role changes, mark the old one as superseded with a date instead of deleting it. For example, "12.25m/year (to 2026), then 13.0m/year (from 2027, source X)". That way you can still answer "what was it before the change". Put a `review` date on volatile, frequently-read facts so the linter can flag them before they become confidently wrong.
 
 Full schema per type in `wiki/workflows/frontmatter-schema.md`. Enforced by `.claude/hooks/validate.py` on write and by `.claude/scripts/fmquery.py` for queries.
 
@@ -169,6 +169,7 @@ You will rarely type slash commands. You say what you want and the agent recogni
 
 | When you say something like | Run this |
 |---|---|
+| "set this up for me", "adapt this to my work", "I have a new role" | `/onboard` |
 | "there is something in the inbox", "take this in", "read this" | `/ingest` |
 | "what do we know about X", "find out", "where are we with Z" | `/query` |
 | "weekly status", "what is happening this week", "prioritise" | `/weekly-review` |

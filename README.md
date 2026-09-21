@@ -18,7 +18,7 @@ Four failure modes, and what this does about each.
 
 **Hand-written overviews go stale.** Someone writes a "current status" page, it is accurate for a week, and then it quietly lies for a year. Here the status page is generated from frontmatter on every run and cannot be edited by hand. If it is wrong, the underlying page is wrong, and you fix it there.
 
-**Contradictions stack.** New information gets appended below old information and both sit there, equally confident. Here the ingest step reconciles explicitly: add, update, or supersede. A superseded fact keeps its date so you can still answer "what was the price at the last negotiation".
+**Contradictions stack.** New information gets appended below old information and both sit there, equally confident. Here the ingest step reconciles explicitly: add, update, or supersede. A superseded fact keeps its date so you can still answer "what was it before the change".
 
 **Inference hardens into fact.** The model writes a reasonable conclusion, and six months later it reads like something you verified. Here anything derived carries `confidence: tentative` and a `review` date, and the linter surfaces it when the date passes.
 
@@ -45,6 +45,7 @@ data/                      Structured datasets the analyses are built on
   scripts/voice.py         Style enforcement before anything ships
   loop.md                  The semi-autonomous improvement loop
 docs/ARCHITECTURE.md       Why it is built this way
+docs/ONBOARDING.md         How /onboard shapes the template to your work
 docs/MEMORY-ZONE.md        The second zone, which lives outside the repo
 ```
 
@@ -58,7 +59,9 @@ python3 .claude/scripts/fmquery.py --dashboard   # writes wiki/status.md
 python3 .claude/scripts/fmquery.py --search "renewal"
 ```
 
-Then open `CLAUDE.md` and do three things.
+Then say **"set this up for me"**. The agent runs `/onboard`, interviews you about your work in nine questions, and shapes the library to it: the roles, the quality filter, the page template, the example, the voice rules and the first fact checks. Details in [docs/ONBOARDING.md](docs/ONBOARDING.md).
+
+If you would rather do it by hand, open `CLAUDE.md` and do three things.
 
 1. Replace the **hats** with your own roles. A hat is a context you work in, and the `hat` field in frontmatter is what lets one library serve all of them without splitting into silos.
 2. Adjust the **quality filter** section. What belongs in your library is specific to your work, and getting this wrong is the main way a library fills with noise.
@@ -80,7 +83,7 @@ Each is a slash command in `.claude/commands/`. You rarely type them. You descri
 | `/eval` | Measure the library against a golden set of questions, track the pass rate |
 | `/distill-skill` | Turn a procedure that worked into a reusable command |
 
-Plus `/new-case`, `/weekly-review`, and a semi-autonomous `/loop` that runs the ladder on its own.
+Plus `/onboard` to shape the library to your work, `/new-case`, `/weekly-review`, and a semi-autonomous `/loop` that runs the ladder on its own.
 
 ## The rules that actually matter
 

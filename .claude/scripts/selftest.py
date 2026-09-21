@@ -80,7 +80,8 @@ open(v, "w").write("The meeting is on Tuesday. Bring the benchmark and the two d
 rc, out = run([VOICE, v])
 check("voice passes clean prose", "CLEAN" in out, out[:200])
 
-for f in ("CLAUDE.md", "README.md", "docs/ARCHITECTURE.md", ".claude/settings.json",
+for f in ("CLAUDE.md", "README.md", "docs/ARCHITECTURE.md", "docs/ONBOARDING.md",
+          ".claude/commands/onboard.md", ".claude/settings.json",
           "wiki/index.md", "wiki/log.md", "wiki/reference/eval-set.md"):
     check(f"file present {f}", os.path.isfile(os.path.join(ROOT, f)))
 try:

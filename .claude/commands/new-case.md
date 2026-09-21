@@ -6,7 +6,7 @@ You are running `/new-case`.
 
 ## 1. Establish the basics
 
-Title, which hat, counterparty, what is at stake, and the deadline if there is one. Ask for whatever is missing rather than guessing, because the frontmatter written now will drive the dashboard for the life of the case.
+Title, which hat, who else is involved, what is at stake, and the deadline if there is one. Ask for whatever is missing rather than guessing, because the frontmatter written now will drive the dashboard for the life of the case.
 
 ## 2. Check it does not already exist
 
@@ -18,13 +18,15 @@ Search `wiki/cases/` and the archive. A revived case is better than a duplicate.
 
 ```
 ## Situation            what this is, in a paragraph
-## Positions            ours and theirs, with sources
-## Numbers              what is at stake, how it was calculated
+## Who is involved      each party and what they want, with sources
+## What is at stake     figures, terms, consequences, how they were arrived at
 ## Chronology           dated, append-only
 ## Next steps           what happens, who does it, by when
 ## Open questions       what we do not know yet
 ## Sources
 ```
+
+These are the defaults. `/onboard` replaces them with the sections the owner actually needs, in their words. If that has been run, use what it wrote here rather than the list above.
 
 Sub-documents (chronology, preparation, analysis) go in the same folder and do not need full frontmatter.
 

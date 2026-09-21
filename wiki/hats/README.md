@@ -2,7 +2,7 @@
 
 One router page per role you work in. The entry point when you step into that context.
 
-A hat page holds the things that are true for that role and nowhere else: who the counterparties are, what the standing agreements look like, which cases are live, who decides what, and the conventions specific to working there.
+A hat page holds the things that are true for that role and nowhere else: who the key people are, what the standing arrangements are, which cases are live, who decides what, and the conventions specific to working there.
 
 It does not duplicate the case pages. It links to them.
 
@@ -25,6 +25,6 @@ TL;DR. One line on what this role is and what it is responsible for.
 ## What this role is
 ## Live cases
 ## Key people
-## Standing agreements and terms
+## Standing arrangements and terms
 ## Conventions specific to this hat
 ```

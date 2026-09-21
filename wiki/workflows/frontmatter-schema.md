@@ -33,7 +33,7 @@ TL;DR. Every main page carries YAML frontmatter. Dates are ISO, always. Enforced
 |---|---|
 | `next_action` | what happens next, in one line |
 | `next_action_date` | when. A passed date is what the dashboard sorts on |
-| `counterpart` | who is on the other side |
+| `counterpart` | the other party, if there is one. A client, a supplier, a partner, an opponent |
 | `value` | what is at stake, if quantifiable |
 | `expires` | when an agreement ends |
 | `review` | when volatile facts must be re-verified |
