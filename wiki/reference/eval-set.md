@@ -29,16 +29,16 @@ Columns are page (wiki-relative path), field (a frontmatter key, or `body` for t
 
 | page | field | expected |
 |---|---|---|
-| cases/example-renewal/overview.md | status | active |
-| cases/example-renewal/overview.md | counterpart | Northwind Software |
-| cases/example-renewal/overview.md | body | ~export clause |
+| cases/example-talk/overview.md | status | active |
+| cases/example-talk/overview.md | hat | example-hat |
+| cases/example-talk/overview.md | body | ~abstract |
 | workflows/frontmatter-schema.md | type | workflow |
 
 ## Questions
 
 | # | Question | Expected answer | Source page |
 |---|---|---|---|
-| 1 | What does Northwind want and what do we want instead? | A three-year term at a held price; we want annual terms plus a data-export clause | cases/example-renewal/overview.md |
+| 1 | When is the abstract due, and who wants it? | 15 February, the programme committee | cases/example-talk/overview.md |
 | 2 | _(replace with your own)_ | | |
 
 ## Pass rate over time

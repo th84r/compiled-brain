@@ -17,7 +17,7 @@ One or two sentences. What you do in this context and who you do it for.
 
 ## Live cases
 
-- [Platform licence renewal with Northwind](../cases/example-renewal/overview.md)
+- [Talk at the Harbourside Conference](../cases/example-talk/overview.md)
 
 ## Key people
 

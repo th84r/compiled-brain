@@ -8,7 +8,7 @@ Built for people who do professional work across several roles at once and need 
 
 ## The idea in one paragraph
 
-Treat raw material as source code. Emails, meeting notes, reports, datasets, contracts. Treat the language model as a compiler. Treat the wiki as compiled output. The wiki is never where you dump things. It is where things end up after they have been read, filtered, reconciled against what you already knew, and written down with a date on them.
+Treat raw material as source code. Emails, meeting notes, reports, datasets, drafts. Treat the language model as a compiler. Treat the wiki as compiled output. The wiki is never where you dump things. It is where things end up after they have been read, filtered, reconciled against what you already knew, and written down with a date on them.
 
 The pattern comes from Andrej Karpathy's LLM-wiki sketch. What this repository adds is the machinery that keeps it honest once it is more than a weekend project: a schema, a validation hook, a generated dashboard, an append-only log, and a rule that facts get invalidated rather than overwritten.
 
@@ -56,7 +56,7 @@ git clone https://github.com/<you>/compiled-brain.git my-brain
 cd my-brain
 python3 .claude/scripts/selftest.py              # every check should say ok
 python3 .claude/scripts/fmquery.py --dashboard   # writes wiki/status.md
-python3 .claude/scripts/fmquery.py --search "renewal"
+python3 .claude/scripts/fmquery.py --search "abstract"
 ```
 
 Then say **"set this up for me"**. The agent runs `/onboard`, interviews you about your work in nine questions, and shapes the library to it: the roles, the quality filter, the page template, the example, the voice rules and the first fact checks. Details in [docs/ONBOARDING.md](docs/ONBOARDING.md).

@@ -48,7 +48,7 @@ Hand-written overviews rot. So at the start of every working session:
 The two build on each other. Do not duplicate. Rule of thumb:
 
 - "How this person works", "who is who", "writing style rules" go to agent memory.
-- "What do we know about case X", "developments in market Y", "methodology Z" go to the wiki.
+- "What do we know about case X", "developments in field Y", "methodology Z" go to the wiki.
 
 ---
 
@@ -93,9 +93,9 @@ The self-reinforcing loop (`/loop`, driver in `.claude/loop.md`) runs the operat
 
 Adapt this section to your work. It is the main defence against a library that fills with noise.
 
-**Belongs:** decisions and the reasoning behind them, outcomes of meetings and what the people involved want, figures and terms you will be asked about again, developments in your field that change what is true, findings and methods with value beyond the case they came from, people's roles.
+**Belongs:** decisions and the reasoning behind them, outcomes of meetings and what the people involved want, figures and facts you will be asked about again, developments in your field that change what is true, findings and methods with value beyond the case they came from, people's roles.
 
-**Does not belong:** ordinary correspondence without substance, raw material without analysis, active correspondence still in flow (keep as `inbox/processed` until settled), anything already in agent memory.
+**Does not belong:** ordinary correspondence without substance, raw material without analysis, active correspondence still in flow (keep as `inbox/processed` until it has concluded), anything already in agent memory.
 
 ---
 
@@ -110,11 +110,11 @@ type: case | project | person | reference | workflow
 status: active | waiting | on_hold | closed
 confidence: verified | tentative     # how much may be asserted
 hat: <hat-one> | <hat-two> | bridging
-counterpart: the other party, if there is one
+parties: who else is involved, if anyone
 value: economic value if relevant
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-expires: YYYY-MM-DD                  # if an agreement has an end date
+expires: YYYY-MM-DD                  # if it has an end date
 review: YYYY-MM-DD                   # when volatile facts must be re-verified
 next_action: what happens next
 next_action_date: YYYY-MM-DD
@@ -126,7 +126,7 @@ sources: [inbox/processed/2026-04/x.pdf]
 
 **TL;DR line.** Every page opens with one line summarising the core, so relevance can be triaged before reading the whole page.
 
-**Facts that change get invalidated rather than overwritten.** When a price, term, position or role changes, mark the old one as superseded with a date instead of deleting it. For example, "12.25m/year (to 2026), then 13.0m/year (from 2027, source X)". That way you can still answer "what was it before the change". Put a `review` date on volatile, frequently-read facts so the linter can flag them before they become confidently wrong.
+**Facts that change get invalidated rather than overwritten.** When a number, a date, a status or a role changes, mark the old one as superseded with a date instead of deleting it. For example, "capacity 40 (to 2026), then 48 (from 2027, source X)". That way you can still answer "what was it before the change". Put a `review` date on volatile, frequently-read facts so the linter can flag them before they become confidently wrong.
 
 Full schema per type in `wiki/workflows/frontmatter-schema.md`. Enforced by `.claude/hooks/validate.py` on write and by `.claude/scripts/fmquery.py` for queries.
 
@@ -159,7 +159,7 @@ Run `python3 .claude/scripts/voice.py <file>` before anything ships.
 
 ## Ingest conventions
 
-Naming in `inbox/pending/`: `YYYYMMDD-source-topic-short.ext`, for example `20260428-mail-northwind-proposal.eml`. After ingest the file is kept in `inbox/processed/YYYY-MM/`.
+Naming in `inbox/pending/`: `YYYYMMDD-source-topic-short.ext`, for example `20260428-mail-committee-invitation.eml`. After ingest the file is kept in `inbox/processed/YYYY-MM/`.
 
 ---
 
@@ -190,7 +190,7 @@ If a request surfaces something that belongs in the wiki, compile it too, withou
 
 - Deletions or moves that reduce information
 - External actions (sending mail, pushing to a remote, contacting a third party)
-- Decisions that commit the user to someone else (prices, draft agreements)
+- Decisions that commit the user to someone else (figures, promises, drafts sent as final)
 
 ---
 

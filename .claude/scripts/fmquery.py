@@ -10,11 +10,11 @@ Examples,
   fmquery.py --dashboard                   # regenerate wiki/status.md
   fmquery.py --stale                       # overdue review/expires + old active pages
   fmquery.py --type case --active --sort value --desc
-  fmquery.py --type case --hat northwind
+  fmquery.py --type case --hat example-hat
   fmquery.py --orphans                     # pages with no inbound links
-  fmquery.py --search "renewal benchmark"  # ranked full-text search, pages and log
-  fmquery.py --search "northwind" --hat northwind --type case
-  fmquery.py --links cases/northwind/overview.md
+  fmquery.py --search "abstract deadline"  # ranked full-text search, pages and log
+  fmquery.py --search "slides" --hat example-hat --type case
+  fmquery.py --links cases/example-talk/overview.md
   fmquery.py --eval                        # deterministic assertions, no model needed
   fmquery.py --rotate-log                  # move old log entries to wiki/log/YYYY-MM.md
   fmquery.py --rotate-log --dry-run

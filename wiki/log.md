@@ -10,9 +10,9 @@ Write in full sentences. A log line that only makes sense to the person who wrot
 
 ---
 
-## 2026-01-10 new-case | Example renewal case opened
+## 2026-01-10 new-case | Example talk page opened
 
-Opened `cases/example-renewal/` from Northwind's written proposal. They want a three-year term, we want annual terms plus a data-export clause. Legal review queued. Delete this entry together with the example case once you have your own.
+Opened `cases/example-talk/` from the committee's invitation. Abstract due 15 February, slides 1 October, co-presenter offered the second half. Delete this entry together with the example page once you have your own.
 
 ## 2026-01-10 setup | Library initialised from the compiled-brain template
 

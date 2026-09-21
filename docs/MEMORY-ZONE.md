@@ -41,7 +41,7 @@ Four types have proved enough. `user` for who the person is. `feedback` for guid
 
 Before saving to memory, check whether the wiki already records it. Before saving to the wiki, check whether it is really about the person. When a fact could go either way, it goes to the wiki with a one-line pointer in memory.
 
-Duplicating between the zones is how they drift. A price recorded in both places will be updated in one and not the other, and six months later the two disagree.
+Duplicating between the zones is how they drift. A figure recorded in both places will be updated in one and not the other, and six months later the two disagree.
 
 ## If your agent has no persistent memory
 

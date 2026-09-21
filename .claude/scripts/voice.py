@@ -197,7 +197,7 @@ def scan(path, mail=False, strict=False):
         if max(a, b, c) - min(a, b, c) <= 4:
             found.append(("4 rule of three", m.group(0)[:90]))
 
-    # 9. Consultant metaphor as load-bearing architecture.
+    # 9. Business metaphor as load-bearing architecture.
     met = re.findall(METAPHOR, t, re.I)
     if len(met) > max(3, len(t.split()) // 250):
         found.append(("9 metaphor overdose",

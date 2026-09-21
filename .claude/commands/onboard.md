@@ -40,7 +40,7 @@ Maps to: what `wiki/cases/` is called in their library, the `type` vocabulary, a
 
 ### 4. The page
 
-"When you open a page about one of those, what do you need to see? Here is the default: what the situation is, who is involved and what each of them wants, what is at stake, what has happened so far, what happens next, what you do not know yet, and where it all came from. Rename, remove or add."
+"When you open a page about one of those, what do you need to see? Here is the default: what the situation is, who is involved and what each of them needs, what matters about it, what has happened so far, what happens next, what you do not know yet, and where it all came from. Rename, remove or add."
 
 Maps to: the section template in `/new-case`, and the example page.
 

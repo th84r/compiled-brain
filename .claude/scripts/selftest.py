@@ -45,10 +45,10 @@ for flag in (["--stale"], ["--orphans"], ["--type", "case"], ["--active"],
     rc, out = run([FMQ] + flag)
     check("fmquery " + " ".join(flag), rc == 0 and out.startswith("#"), out[:120])
 
-rc, out = run([FMQ, "--search", "export clause"])
+rc, out = run([FMQ, "--search", "abstract"])
 check("search returns ranked hits", rc == 0 and "# search" in out and "cases/" in out, out[:200])
 
-rc, out = run([FMQ, "--links", "cases/example-renewal/overview.md"])
+rc, out = run([FMQ, "--links", "cases/example-talk/overview.md"])
 check("links resolves a page", rc == 0 and "inbound" in out and "outbound" in out, out[:200])
 
 rc, out = run([FMQ, "--eval"])
@@ -72,11 +72,11 @@ shutil.rmtree(tmp)
 
 v = os.path.join(tempfile.mkdtemp(), "v.txt")
 open(v, "w").write("It is not about speed, it is about trust. Moreover, we delve into it. "
-                   "This is a renewal, not a new deal.\n")
+                   "This is a draft, not a final version.\n")
 rc, out = run([VOICE, v])
 check("voice catches antithesis", "antithesis" in out, out[:200])
 check("voice catches connector and filler", "connector" in out and "filler" in out, out[:200])
-open(v, "w").write("The meeting is on Tuesday. Bring the benchmark and the two draft clauses.\n")
+open(v, "w").write("The meeting is on Tuesday. Bring the slides and the two handouts.\n")
 rc, out = run([VOICE, v])
 check("voice passes clean prose", "CLEAN" in out, out[:200])
 

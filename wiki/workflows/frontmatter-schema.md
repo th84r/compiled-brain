@@ -33,18 +33,18 @@ TL;DR. Every main page carries YAML frontmatter. Dates are ISO, always. Enforced
 |---|---|
 | `next_action` | what happens next, in one line |
 | `next_action_date` | when. A passed date is what the dashboard sorts on |
-| `counterpart` | the other party, if there is one. A client, a supplier, a partner, an opponent |
+| `parties` | who else is involved, if anyone |
 | `value` | what is at stake, if quantifiable |
-| `expires` | when an agreement ends |
+| `expires` | when it ends, if it has an end date |
 | `review` | when volatile facts must be re-verified |
 
 ## Rules that are easy to get wrong
 
-**Status carries no nuance.** Four values, nothing else. "Active but waiting for their lawyer" is `status: active` with the nuance in `next_action`. Put it in the status field and the dashboard can no longer group across pages, which is the whole reason the field exists.
+**Status carries no nuance.** Four values, nothing else. "Active but waiting for a reply" is `status: active` with the nuance in `next_action`. Put it in the status field and the dashboard can no longer group across pages, which is the whole reason the field exists.
 
 **Dates are never relative.** "Next month" is not a date. Convert it when you write it.
 
-**`review` belongs on volatile facts only.** A price, a term, a position, a role. Putting a review date on a historical chronology just creates noise that trains you to ignore the linter.
+**`review` belongs on volatile facts only.** A number, a date, a status, a role. Putting a review date on a historical chronology just creates noise that trains you to ignore the linter.
 
 **`confidence: tentative` is not an admission of weakness.** It is what lets a derived conclusion be useful without becoming a false fact. Use it freely.
 
