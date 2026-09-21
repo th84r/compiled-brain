@@ -20,7 +20,7 @@ A failed assertion in `--eval` outranks everything else in the report. It means 
 
 - **Contradictions.** Facts that conflict across pages. Are they dated as superseded, or just stacked?
 - **Confident inference.** Pages marked `verified` that actually contain derived conclusions.
-- **Missing review dates.** Volatile facts (prices, terms, positions, roles) with no `review` field.
+- **Missing review dates.** Volatile facts (numbers, dates, statuses, roles) with no `review` field.
 - **Dead sources.** `sources:` entries pointing at files that no longer exist.
 - **Schema drift.** Status values outside the vocabulary, missing TL;DR lines, missing `hat`.
 

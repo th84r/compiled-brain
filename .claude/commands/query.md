@@ -6,7 +6,7 @@ You are running `/query`.
 
 ## 1. Understand the question
 
-Is it about a case, a person, a market, a method, or a decision? That decides where to look first.
+Is it about a case, a person, a field, a method, or a decision? That decides where to look first.
 
 ## 2. Search both zones
 

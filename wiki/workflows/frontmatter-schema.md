@@ -34,7 +34,7 @@ TL;DR. Every main page carries YAML frontmatter. Dates are ISO, always. Enforced
 | `next_action` | what happens next, in one line |
 | `next_action_date` | when. A passed date is what the dashboard sorts on |
 | `parties` | who else is involved, if anyone |
-| `value` | what is at stake, if quantifiable |
+| `value` | a number worth seeing at a glance, if there is one. A budget, a size, a count |
 | `expires` | when it ends, if it has an end date |
 | `review` | when volatile facts must be re-verified |
 

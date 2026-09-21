@@ -16,7 +16,7 @@ Useful directions: what each person involved wants and why, the numbers behind a
 
 ## 3. Sort the gaps
 
-- **Web-answerable** (public filings, market data, law, published reports). Close them now with a targeted search and write in the answer with its source.
+- **Web-answerable** (public records, published figures, published reports). Close them now with a targeted search and write in the answer with its source.
 - **Internally answerable** (someone has the file, someone remembers). Write them to `wiki/open-questions.md` addressed to whoever can answer.
 - **Genuinely unknown.** Note them as risks on the case page.
 

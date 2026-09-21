@@ -21,7 +21,7 @@ You are running the loop. The goal is to make the library cleverer, cleaner and 
 Each iteration, pick ONE task from the top of the ladder that has something to do. Do it, commit the additive parts, and end the iteration.
 
 1. **New raw material.** Anything in `inbox/pending/`? Run the `/ingest` logic on one file.
-2. **Stale facts.** Run `fmquery.py --stale`. Volatile facts with no `review` date? Set them (additive). Passed dates on internal facts become proposals. Web-verifiable ones (market data, law) get verified with a targeted lookup and updated with the source.
+2. **Stale facts.** Run `fmquery.py --stale`. Volatile facts with no `review` date? Set them (additive). Passed dates on internal facts become proposals. Web-verifiable ones (public figures, published facts) get verified with a targeted lookup and updated with the source.
 3. **Contradictions.** Find facts that conflict across the library. Are they dated as superseded, or just stacked? Additive dating you fix. A real conflict about what is true becomes a proposal.
 4. **Knowledge gaps.** Run the `/gap-scan` logic on one active case. Write what the page cannot answer to `wiki/open-questions.md`. Close the web-answerable ones.
 5. **Cross-links and orphans.** Run `fmquery.py --orphans`. Link orphan pages in where they belong.
