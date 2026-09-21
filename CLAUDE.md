@@ -25,7 +25,7 @@ Write hat values in lowercase. `wiki/hats/` holds one router page per hat, which
 
 ## Session start, fresh context before anything else
 
-Hand-written overviews rot. So at the start of every working session:
+Hand-written overviews rot, so at the start of every working session:
 
 1. **Run** `python3 .claude/scripts/fmquery.py --dashboard`. Takes seconds. It regenerates `wiki/status.md` from frontmatter.
 2. **Read** `wiki/status.md`. It is the authoritative picture of now: active cases per hat, overdue actions, upcoming reviews. It beats `index.md`, `hats/` and the agent's own memory, all of which can be behind.
