@@ -211,23 +211,63 @@ def links_for(pages, target):
     return me, sorted(inbound), sorted(outbound(me)) if me else []
 
 
-def find_orphans(pages):
+def find_orphans(pages, include_archive=False):
+    """Pages nothing links to.
+
+    Builds ONE set of link targets and looks up in it. An earlier version
+    concatenated every page body into a single string and ran four substring
+    searches per page, which on 4,261 pages and 65 MB came to roughly a
+    trillion character comparisons and never finished.
+
+    Every index.md counts as a link source, not just the root one. load_pages
+    skips index.md, so they are read here. A folder index such as
+    wiki/people/index.md is exactly the catalogue that makes its pages
+    reachable, and without it 110 person cards looked like orphans.
+
+    wiki/archive/ is skipped by default. An archived page with no inbound
+    links is parked on purpose rather than lost.
+    """
+    targets = set()
+    sources = [fm.get("_body", "") + " " + str(fm.get("related", "")) for fm in pages]
     idx = ""
-    ip = os.path.join(WIKI, "index.md")
-    if os.path.isfile(ip):
-        idx = open(ip, encoding="utf-8", errors="ignore").read()
-    alltext = idx + "\n".join(p.get("_body", "") for p in pages)
-    orphans = []
+    for root, _, files in os.walk(WIKI):
+        for fn in files:
+            if fn == "index.md":
+                try:
+                    txt = open(os.path.join(root, fn), encoding="utf-8", errors="ignore").read()
+                except Exception:
+                    continue
+                sources.append(txt)
+                idx += "\n" + txt
+    for text in sources:
+        for m in LINK_RX.finditer(text):
+            t = (m.group(1) or m.group(2) or "").strip()
+            if not t or t.startswith(("http://", "https://")):
+                continue
+            t = t.replace("\\", "/").lstrip("./")
+            targets.add(t)
+            targets.add(os.path.splitext(os.path.basename(t))[0])
+            if "/" in t:
+                targets.add(t.split("/")[0])
+    # Only specific sub-paths count as coverage, such as "cases/acme-review".
+    # A bare top-level "cases/" does not cover everything inside it, otherwise
+    # every page is automatically linked and the check always returns zero.
+    for m in re.finditer(r"([a-z0-9_-]+/[a-z0-9_/-]+)", idx):
+        targets.add(m.group(1).rstrip("/"))
+
+    out = []
     for fm in pages:
         path = fm["_path"]
-        stem = os.path.splitext(os.path.basename(path))[0]
-        folder = path.split("/")[0] if "/" in path else ""
-        if (stem in alltext or path in alltext
-                or (folder and "/" + folder + "/" in alltext)
-                or (folder and folder + "/" in idx)):
+        if not include_archive and path.startswith("archive/"):
             continue
-        orphans.append(fm)
-    return orphans
+        stem = os.path.splitext(os.path.basename(path))[0]
+        no_ext = os.path.splitext(path)[0]
+        folder = os.path.dirname(path)
+        if (stem in targets or path in targets or no_ext in targets
+                or (folder.count("/") >= 1 and folder in targets)):
+            continue
+        out.append(fm)
+    return out
 
 
 # -------------------------------------------------------------------- search
@@ -465,6 +505,8 @@ def main():
     ap.add_argument("--active", action="store_true")
     ap.add_argument("--stale", action="store_true")
     ap.add_argument("--orphans", action="store_true")
+    ap.add_argument("--include-archive", action="store_true",
+                    help="include wiki/archive in --orphans")
     ap.add_argument("--dashboard", action="store_true", help="regenerate wiki/status.md")
     ap.add_argument("--search", metavar="QUERY", help="ranked full-text search, pages and log")
     ap.add_argument("--limit", type=int, default=10)
@@ -499,7 +541,7 @@ def main():
         return
 
     if a.orphans:
-        rows = find_orphans(pages)
+        rows = find_orphans(pages, a.include_archive)
         print(f"# Orphan pages ({len(rows)})")
         for fm in sorted(rows, key=lambda x: x["_path"]):
             print(f"  {fm['_path']}  [{fm.get('type','?')}/{fm.get('status','?')}]")
@@ -558,4 +600,12 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except BrokenPipeError:
+        # happens when output is piped through | head. Exit quietly.
+        try:
+            sys.stdout.close()
+        except Exception:
+            pass
+        os._exit(0)
