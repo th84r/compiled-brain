@@ -75,6 +75,9 @@ def sentences(t):
 # ------------------------------------------------------------------ mechanics
 MECHANICS = [
     ("em dash", r"[—―]"),
+    # A sentence that opens with a conjunction is a spoken habit in some
+    # languages and a tell in written prose. Opt-out by deleting the line.
+    ("conjunction opener", r"(?:^|[.!?] )(?:And|But|So) [a-zA-Z]"),
 ]
 
 # Opt-in via --strict. A colon introducing a list is ordinary English, so
