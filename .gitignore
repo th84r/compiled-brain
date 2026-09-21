@@ -1,0 +1,15 @@
+# Raw material and generated artefacts stay local by default.
+# Remove these lines if you want your own content versioned.
+inbox/pending/*
+inbox/processed/*
+inbox/archive/*
+output/*
+!**/.gitkeep
+
+# The dashboard is machine-generated on every run
+wiki/status.md
+
+.DS_Store
+__pycache__/
+*.pyc
+.claude/settings.local.json

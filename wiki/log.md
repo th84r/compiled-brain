@@ -1,0 +1,19 @@
+# Operations log
+
+Append-only. One entry per session or per meaningful change. Newest at the bottom.
+
+This file is the audit trail. It answers "when did we learn this" and "why did this change", which frontmatter dates alone cannot.
+
+Entries start with `## YYYY-MM-DD operation | title`. That header is what `--rotate-log` groups on and what `--search` treats as a document, so keep it.
+
+Write in full sentences. A log line that only makes sense to the person who wrote it on the day is a log line that has already failed.
+
+---
+
+## 2026-01-10 new-case | Example renewal case opened
+
+Opened `cases/example-renewal/` from Northwind's written proposal. They want a three-year term, we want annual terms plus a data-export clause. Legal review queued. Delete this entry together with the example case once you have your own.
+
+## 2026-01-10 setup | Library initialised from the compiled-brain template
+
+Hats, quality filter and voice rules still carry the template placeholders.
