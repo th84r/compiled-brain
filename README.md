@@ -130,3 +130,5 @@ Issues and pull requests welcome, particularly on the schema and on the voice ru
 ## Licence
 
 MIT. See [LICENSE](LICENSE).
+
+<!-- guard verified 2026-09-22 -->
