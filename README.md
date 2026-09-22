@@ -8,9 +8,9 @@ Built for people who do professional work across several roles at once and need 
 
 ## Why bookkeeping
 
-Accounting solved this problem in 1494. How do you keep a record that many people depend on, where the facts change over time, and where someone has to be able to reconstruct what was true on any given date.
+Merchants in Genoa and Florence solved this problem in the fourteenth century, and Luca Pacioli wrote their method down in 1494. How do you keep a record that many people depend on, where the facts change over time, and where someone has to be able to reconstruct what was true on any given date.
 
-The answer has not improved in five centuries. **You never rub anything out. You post a correction.**
+The answer has held for six centuries. **You never rub anything out. You post a correction.**
 
 That single rule is what this repository implements for knowledge, and the correspondence is closer than an analogy.
 
@@ -19,10 +19,19 @@ That single rule is what this repository implements for knowledge, and the corre
 | The journal, chronological and append-only | `wiki/log.md` |
 | One account per thing | One page per case, project or person |
 | Posting an entry | `/ingest`, where new material is reconciled against old |
-| The trial balance, computed and never written | `wiki/status.md` |
+| The balance sheet, computed and never written | `wiki/status.md` |
+| The trial balance, proving both sides agree | `fmquery.py --balance` |
 | A correcting entry, because you never rub out | Supersede with a date rather than overwrite |
 | A reference and a date on every entry | A source and a date on every fact |
 | The auditor | `fmquery.py --eval`, assertions with no model involved |
+
+## Why double
+
+In double-entry bookkeeping every transaction is written twice, and the two sides must agree. That agreement is the proof that nothing went missing.
+
+Here every fact is written twice too. Once by date in the journal, `wiki/log.md`, saying when it arrived and why. Once by subject on its page, where it is reconciled against what was already known. `fmquery.py --balance` holds the two against each other. A page that changed with no journal entry, or a journal entry naming a page that is gone, shows up as out of balance.
+
+This is the answer to a question every knowledge system eventually meets. Trusting what is stored is the easy part. Trusting what flows out of it, into a report, a decision or another person's AI, requires that every fact can show where it came from and when. The journal is that trail, and the balance is how you know the trail is complete.
 
 ## How material gets in
 
@@ -45,7 +54,8 @@ Four failure modes, and what this does about each.
 ## What is in the box
 
 ```
-CLAUDE.md                  The brain's own instructions. Read first, edit to fit you.
+CLAUDE.md                  The library's own instructions. Read first, edit to fit you.
+AGENTS.md                  Points any other coding agent to CLAUDE.md
 wiki/                      The books
   index.md                 Table of contents and router
   log.md                   Append-only operations log
@@ -58,7 +68,7 @@ data/                      Structured datasets the analyses are built on
 .claude/
   commands/                Seven operations as slash commands
   hooks/validate.py        Schema enforcement on every write
-  scripts/fmquery.py       Query, search, eval, dashboard, log rotation
+  scripts/fmquery.py       Query, search, eval, balance, dashboard, log rotation
   scripts/selftest.py      Proves the machinery works on this checkout
   scripts/voice.py         Style enforcement before anything ships
   loop.md                  The semi-autonomous improvement loop
@@ -66,6 +76,14 @@ docs/ARCHITECTURE.md       Why it is built this way
 docs/ONBOARDING.md         How /onboard shapes the template to your work
 docs/MEMORY-ZONE.md        The second zone, which lives outside the repo
 ```
+
+## Not tied to one tool
+
+The books are plain Markdown with YAML frontmatter. Any editor opens them, any agent can read them, and they will still open in twenty years. The checks are plain Python with no dependencies and no model involved, so `fmquery.py`, `validate.py`, `voice.py` and `selftest.py` give the same answer whichever AI you use, or none.
+
+The operations in `.claude/commands/` are written for Claude Code, but each one is an ordinary Markdown file of instructions. Any agent that can read files and run Python can follow them. `AGENTS.md` points agents that look for that file name to `CLAUDE.md`.
+
+What you would lose by switching agent is the automatic hook on every write. Run `validate.py` by hand or in a git pre-commit hook instead, and nothing else changes.
 
 ## Quickstart
 

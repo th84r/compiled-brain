@@ -43,6 +43,12 @@ Before saving to memory, check whether the wiki already records it. Before savin
 
 Duplicating between the zones is how they drift. A figure recorded in both places will be updated in one and not the other, and six months later the two disagree.
 
+## When several people share the library
+
+Each person keeps their own memory zone and the wiki is shared. The memory holds how that person works, their shortcuts, what they have corrected their agent on. The wiki holds what the team knows.
+
+The test for a team is simple. If two people's memories both hold the same fact, it belongs in the wiki, because the next colleague will not have it. Corrections about how the library itself should be run belong in `CLAUDE.md`, where every agent reads them, rather than in one person's memory.
+
 ## If your agent has no persistent memory
 
 Keep a `memory/` folder in the repository with the same structure, gitignored if it holds anything private. The two-zone discipline matters more than where the second zone physically lives.

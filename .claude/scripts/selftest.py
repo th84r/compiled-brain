@@ -7,6 +7,7 @@ CI job can use it as-is.
 
     python3 .claude/scripts/selftest.py
 """
+import datetime
 import json
 import os
 import shutil
@@ -44,6 +45,21 @@ for flag in (["--stale"], ["--orphans"], ["--type", "case"], ["--active"],
              ["--sort", "updated", "--desc"], ["--review-before", "today"]):
     rc, out = run([FMQ] + flag)
     check("fmquery " + " ".join(flag), rc == 0 and out.startswith("#"), out[:120])
+
+# The trial balance must catch a page changed with no journal entry. A
+# throwaway account is posted without a log line, checked, and removed.
+rc, out = run([FMQ, "--balance"])
+check("balance runs", rc in (0, 1) and out.startswith("# Trial balance"), out[:200])
+probe_dir = os.path.join(ROOT, "wiki", "cases", "zz-selftest-probe")
+os.makedirs(probe_dir, exist_ok=True)
+try:
+    with open(os.path.join(probe_dir, "overview.md"), "w", encoding="utf-8") as f:
+        f.write("---\ntitle: probe\ntype: case\nstatus: active\nhat: bridging\n"
+                f"created: {datetime.date.today()}\nupdated: {datetime.date.today()}\n---\n\nTL;DR. probe\n")
+    rc, out = run([FMQ, "--balance"])
+    check("balance flags an unposted page", rc == 1 and "zz-selftest-probe" in out, out[:300])
+finally:
+    shutil.rmtree(probe_dir, ignore_errors=True)
 
 # The example fixture is meant to be deleted during onboarding, so nothing
 # here may name it. Discover a page instead, and say so when there is none.

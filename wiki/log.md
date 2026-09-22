@@ -16,4 +16,4 @@ Opened `cases/example-talk/` from the committee's invitation. Abstract due 15 Fe
 
 ## 2026-01-10 setup | Library initialised from the doubleentry template
 
-Hats, quality filter and voice rules still carry the template placeholders.
+Hats, quality filter and voice rules still carry the template placeholders. Opening postings for `hats/example-hat.md`, `reference/eval-set.md` and `reference/output-artefakter.md`.

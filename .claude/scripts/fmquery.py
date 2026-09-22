@@ -15,6 +15,7 @@ Examples,
   fmquery.py --search "abstract deadline"  # ranked full-text search, pages and log
   fmquery.py --search "slides" --hat <hat> --type case
   fmquery.py --links cases/<case>/overview.md
+  fmquery.py --balance
   fmquery.py --eval                        # deterministic assertions, no model needed
   fmquery.py --rotate-log                  # move old log entries to wiki/log/YYYY-MM.md
   fmquery.py --rotate-log --dry-run
@@ -296,6 +297,75 @@ def log_entries():
     return docs
 
 
+GENERIC_STEMS = {"overview", "readme", "index"}
+JOURNAL_PATH_RX = re.compile(
+    r"(?<![\w/])((?:cases|projects|people|reference|themes|orgs|hats|meetings)/"
+    r"[\w\u00c0-\u024f][\w\u00c0-\u024f\-./]*?(?:\.md|/))(?![\w])")
+
+
+def find_unbalanced(pages):
+    """The trial balance between the journal and the accounts.
+
+    Every page is an account and every log entry is a posting. The two must
+    agree, which gives two ways to be out of balance.
+
+    An account without a posting is a page changed inside the journal's
+    current window that no log entry mentions, by path, by folder or by
+    name. Pages last updated before the first entry in log.md count as the
+    opening balance and are left alone, otherwise a library that adopted
+    the journal late would drown in old warnings. A strict same-day rule was
+    tried on a production library and flagged 22 of 49 recent pages, almost
+    all of them logged a day or two apart. Warnings nobody acts on train
+    people to ignore the check, so the rule is only that a posting exists.
+
+    A posting without an account is a path in the journal that no longer
+    exists anywhere in wiki/, archive included. A page moved to the archive
+    under the same file name still counts as found.
+
+    Workflow and index pages are the chart of accounts rather than accounts,
+    and are not checked.
+    """
+    journal = "\n".join(d["_body"] for d in log_entries())
+    current = open(os.path.join(WIKI, "log.md"), encoding="utf-8", errors="ignore").read() \
+        if os.path.isfile(os.path.join(WIKI, "log.md")) else ""
+    dates = LOG_ENTRY.findall(current)
+    opened = parse_date(min(dates)) if dates else None
+
+    def posted(rel):
+        if rel in journal or rel[:-3] in journal:
+            return True
+        folder, stem = os.path.dirname(rel), os.path.splitext(os.path.basename(rel))[0]
+        name = os.path.basename(folder) if stem.lower() in GENERIC_STEMS else stem
+        if not name:
+            return False
+        if stem.lower() in GENERIC_STEMS and folder + "/" in journal:
+            return True
+        return re.search(r"(?<![\w-])" + re.escape(name) + r"(?![\w-])", journal) is not None
+
+    unposted, opening = [], 0
+    for fm in pages:
+        rel = fm["_path"]
+        if rel.startswith("archive/") or str(fm.get("type", "")).lower() in ("workflow", "index", ""):
+            continue
+        upd = parse_date(fm.get("updated")) or parse_date(fm.get("created"))
+        if opened and (not upd or upd < opened):
+            opening += 1
+            continue
+        if not posted(rel):
+            unposted.append(fm)
+
+    files, dirs = set(), set()
+    for root, _, fs in os.walk(WIKI):
+        for f in fs:
+            r = os.path.relpath(os.path.join(root, f), WIKI).replace("\\", "/")
+            files.add(r)
+            dirs.add(os.path.dirname(r))
+    names = {os.path.basename(f) for f in files}
+    dangling = sorted({t for t in (m.group(1).rstrip("/") for m in JOURNAL_PATH_RX.finditer(journal))
+                       if t not in files and t not in dirs and os.path.basename(t) not in names})
+    return unposted, dangling, opening
+
+
 def tokens(s):
     return TOKEN.findall(s.lower())
 
@@ -520,6 +590,8 @@ def main():
     ap.add_argument("--limit", type=int, default=10)
     ap.add_argument("--links", metavar="PAGE", help="inbound and outbound links for a page")
     ap.add_argument("--eval", action="store_true", help="run deterministic assertions")
+    ap.add_argument("--balance", action="store_true",
+                    help="trial balance, pages without a log entry and log entries without a page")
     ap.add_argument("--rotate-log", action="store_true", help="archive old log entries by month")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--review-before"); ap.add_argument("--expires-before"); ap.add_argument("--updated-before")
@@ -547,6 +619,18 @@ def main():
         for x in outb:
             print(f"    -> {x}")
         return
+
+    if a.balance:
+        unposted, dangling, opening = find_unbalanced(pages)
+        print(f"# Trial balance  [{len(unposted) + len(dangling)} out of balance, "
+              f"{opening} pages in the opening balance]")
+        print(f"  accounts without a posting ({len(unposted)})")
+        for fm in sorted(unposted, key=lambda x: x["_path"]):
+            print(f"    {fm['_path']}  [updated {fm.get('updated', '?')}]")
+        print(f"  postings without an account ({len(dangling)})")
+        for t in dangling:
+            print(f"    {t}")
+        return sys.exit(1 if unposted or dangling else 0)
 
     if a.orphans:
         rows = find_orphans(pages, a.include_archive)

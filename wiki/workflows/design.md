@@ -10,7 +10,7 @@ tags: [design, architecture, method]
 related: [[frontmatter-schema.md]], [[self-improvement.md]]
 ---
 
-TL;DR. The library is kept like a set of books. Raw material is posted, each page is an account, the log is the journal, the dashboard is a trial balance computed from the accounts, and nothing is ever rubbed out. Four things keep it honest, a generated dashboard, explicit reconciliation of contradictions, expiring inference, and machine-enforced schema. Full reasoning in `docs/ARCHITECTURE.md`.
+TL;DR. The library is kept like a set of books. Raw material is posted, each page is an account, the log is the journal, the dashboard is a balance sheet computed from the accounts, `--balance` proves journal and accounts agree, and nothing is ever rubbed out. Four things keep it honest, a generated dashboard, explicit reconciliation of contradictions, expiring inference, and machine-enforced schema. Full reasoning in `docs/ARCHITECTURE.md`.
 
 ## The five invariants
 

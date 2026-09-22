@@ -18,11 +18,11 @@ Raw material is what gets posted. The wiki is the books.
 
 The metaphor is double-entry bookkeeping rather than a compiler, and the difference matters. **A compiler has no memory.** It translates what is in front of it and does not care what it translated last time. The most distinctive discipline here is the opposite. New material is held against what is already recorded, and a fact that has changed keeps its old value with a date.
 
-Bookkeeping is the only human system that solved exactly this, a record many people depend on where the facts change and someone must be able to reconstruct any past state. The answer since 1494 has been the same. You never rub anything out, you post a correction.
+Bookkeeping solved exactly this problem long before anyone thought of it as a knowledge problem, a record many people depend on where the facts change and someone must be able to reconstruct any past state. Italian merchants used the method in the fourteenth century and Luca Pacioli wrote it down in 1494. The answer has held since. You never rub anything out, you post a correction.
 
 This has a consequence people usually miss. **You do not edit an account to record something new. You post an entry.** The new thing goes in `inbox/`, and the posting step reads it, decides which accounts it touches, reconciles it against what is already recorded, and writes it in with a date and a reference. The discipline lives in the posting rather than in the person.
 
-It has a second consequence. **A trial balance is recomputed, never kept.** Anything derived from the accounts can be struck again from the accounts whenever they change. This is why `status.md` is generated rather than written. It is the part of the library most likely to be wrong, so it is the part that never gets written by hand.
+It has a second consequence. **A balance sheet is recomputed, never kept.** Anything derived from the accounts can be struck again from the accounts whenever they change. This is why `status.md` is generated rather than written. It is the part of the library most likely to be wrong, so it is the part that never gets written by hand.
 
 ## The four failure modes and their counters
 

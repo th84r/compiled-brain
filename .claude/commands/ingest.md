@@ -40,7 +40,7 @@ Update existing pages according to step 5. Create new pages with correct frontma
 
 ## 7. Log and archive
 
-Add one line to `wiki/log.md`. Move the files from `inbox/pending/` to `inbox/processed/YYYY-MM/`, creating the month folder if needed. Say which files were routed to archive and why.
+Add one entry to `wiki/log.md`, headed `## YYYY-MM-DD ingest | title (initials)`, that names every page you created or changed. An unnamed page will show up as out of balance in `fmquery.py --balance`. Move the files from `inbox/pending/` to `inbox/processed/YYYY-MM/`, creating the month folder if needed. Say which files were routed to archive and why.
 
 ## 8. Report
 

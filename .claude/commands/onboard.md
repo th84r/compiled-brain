@@ -94,15 +94,16 @@ Now edit, in this order. Each step names the file and what changes.
 
 7. **`wiki/reference/eval-set.md`.** Replace the example assertions with real ones from answer 9. Each needs a page that exists, so create or point to the right page. Replace the example question too.
 
-8. **`wiki/index.md`** and **`wiki/log.md`.** Update the index for the new hats. Replace the template log entries with one entry, dated today, `## YYYY-MM-DD onboard | Library set up for <name>`, listing what was configured.
+8. **`wiki/index.md`** and **`wiki/log.md`.** Update the index for the new hats. Replace the template log entries with one entry, dated today, `## YYYY-MM-DD onboard | Library set up for <name> (initials)`, listing what was configured and naming by path every page you created. That entry is the opening balance, and `fmquery.py --balance` checks it in step 9. If several people will share the library, ask who they are and write the cadence table in `CLAUDE.md` with their names.
 
 9. **Run and verify.**
    ```
    python3 .claude/scripts/fmquery.py --dashboard
    python3 .claude/scripts/fmquery.py --eval
+   python3 .claude/scripts/fmquery.py --balance
    python3 .claude/scripts/selftest.py
    ```
-   All three must pass. If `--eval` fails, the assertion or the page is wrong, fix it now rather than leaving a failing check on day one.
+   All four must pass. If `--eval` fails, the assertion or the page is wrong, fix it now rather than leaving a failing check on day one. If `--balance` lists a page, add it to the onboard log entry.
 
 10. **Commit.** `git add -A && git commit -m "onboard: library set up for <name>"`.
 

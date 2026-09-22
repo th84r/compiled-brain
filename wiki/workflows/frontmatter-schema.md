@@ -7,7 +7,7 @@ hat: bridging
 created: 2026-01-01
 updated: 2026-01-01
 tags: [schema, frontmatter, convention]
-related: [[brain-design.md]]
+related: [[design.md]]
 ---
 
 TL;DR. Every main page carries YAML frontmatter. Dates are ISO, always. Enforced by `.claude/hooks/validate.py` on write and read by `.claude/scripts/fmquery.py`.

@@ -33,7 +33,7 @@ Standing knowledge about your field, reference figures, facts that hold across c
 
 How things are done here. See `workflows/`.
 
-- [workflows/brain-design.md](workflows/brain-design.md), why the library is built this way
+- [workflows/design.md](workflows/design.md), why the library is built this way
 - [workflows/frontmatter-schema.md](workflows/frontmatter-schema.md), the full schema per page type
 - [workflows/self-improvement.md](workflows/self-improvement.md), the loop architecture
 - [workflows/skills-index.md](workflows/skills-index.md), procedures that worked

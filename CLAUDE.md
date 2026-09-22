@@ -1,4 +1,4 @@
-# CLAUDE.md, the brain's own instructions
+# CLAUDE.md, the library's own instructions
 
 This file is read at the start of every session. It is the contract between you and the agent. Edit it to fit your work, because a template that is never adapted is a template that gets ignored.
 
@@ -8,7 +8,7 @@ Everything in `<angle brackets>` is a placeholder. The fastest way to replace al
 
 ## What this library is
 
-A self-developing knowledge base covering <your name>'s work across <domain>. It grows sharper over time as raw material is fed in and compiled into structured knowledge.
+A self-developing knowledge base covering <your name>'s work across <domain>. It grows sharper over time as raw material is fed in and posted as dated, sourced knowledge.
 
 **Hats.** You wear several. Each one is a context with its own people, its own deadlines, its own tempo. The library serves all of them from one place, and the `hat` field in frontmatter is what keeps them separable without splitting the library into silos.
 
@@ -38,7 +38,7 @@ Hand-written overviews rot, so at the start of every working session:
 
 ## Mental model
 
-**This is bookkeeping.** Raw material (emails, documents, data, meeting notes) is what gets posted. The wiki is the books. `log.md` is the journal, each page is an account, `status.md` is the trial balance computed from the accounts, and a fact that changes gets a correcting entry rather than an eraser.
+**This is bookkeeping.** Raw material (emails, documents, data, meeting notes) is what gets posted. The wiki is the books. `log.md` is the journal, each page is an account, `status.md` is the balance sheet computed from the accounts, `fmquery.py --balance` is the trial balance proving journal and accounts agree, and a fact that changes gets a correcting entry rather than an eraser.
 
 The rule underneath everything is that **you never rub anything out.** When a price, a date, a status or a role changes, the old value stays with its date and the new one is written beside it. That is what lets the library answer "what was true in March" a year later.
 
@@ -150,9 +150,32 @@ Full schema per type in `wiki/workflows/frontmatter-schema.md`. Enforced by `.cl
 
 `wiki/log.md` is append-only and is the audit trail. It answers "when did we learn this". It also grows without bound, so `fmquery.py --rotate-log` moves entries older than two months into `wiki/log/YYYY-MM.md`, whole and in order. Run it monthly, and search covers the archives so nothing becomes unfindable.
 
+**The journal and the accounts must balance.** Every change to a page is a posting, so it needs a log entry that names the page, by path, folder or file name. `fmquery.py --balance` is the trial balance. It lists pages changed inside the journal's window that no entry mentions, and entries that name a page which no longer exists. Pages older than the first entry in `log.md` are the opening balance and are not checked. The balance is what the name of this system refers to. Each fact is written twice, once by date in the journal and once by subject on its page, and the two are held against each other.
+
+**Entry headers name who posted.** `## YYYY-MM-DD operation | title (initials)`. In a library with one owner the initials are optional. With several people they are what makes the journal answer "who changed this", which is the first question anyone asks about a surprising fact.
+
 ## Memory lifecycle
 
 Wiki pages are in one of three states. **active** (current, shown in the index, updated), **waiting / on_hold** (parked, can be revived), **closed** (read-only, moved to `wiki/archive/` at the next lint). `status` is updated when a case closes. Content is never deleted, only archived. Auditability over tidiness.
+
+## Several people, one library
+
+The library works for a team as well as for one person, with three rules.
+
+- **The wiki is shared and agent memory is personal.** Each person's agent keeps its own memory of how that person works. What the team knows goes in the wiki, where everyone's agent reads it. Anything that two people's memories both hold probably belongs in the wiki.
+- **Who may delete applies to people too.** Additive changes anyone can make. Reducing changes, meaning merges, deletions and moves to the archive, go to `wiki/open-questions.md` for the page's owner to decide. The owner of a case is whoever `next_action` points at.
+- **Keep the library in git and commit often.** Git records who changed what, and the journal records why. Together they are the audit trail. Two people editing the same page is resolved like any merge conflict, and the losing version is superseded with a date rather than lost.
+
+## Cadence
+
+| When | What | Who, in a team |
+|---|---|---|
+| Daily | `/ingest` whatever arrived | Whoever received it |
+| Weekly | `/weekly-review`, `/lint`, `fmquery.py --balance` | One named person, rotating |
+| Monthly | `/consolidate`, `fmquery.py --rotate-log`, archive closed cases | The same person |
+| Quarterly | Read `open-questions.md` and `eval-set.md` and decide what the library should know that it does not | Everyone, together |
+
+The weekly slot matters most. It is the one that keeps `status.md` true, and it is the one that slips first.
 
 ---
 
@@ -210,4 +233,4 @@ If a request surfaces something that belongs in the wiki, post it too, without a
 
 ## What this file is not
 
-This is not a code CLAUDE.md and this is not a software project. It is a living knowledge library for a working professional. When in doubt, ask first and compile afterwards.
+This is not a code CLAUDE.md and this is not a software project. It is a living knowledge library for a working professional. When in doubt, ask first and post afterwards.

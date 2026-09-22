@@ -1,5 +1,5 @@
 ---
-description: Health check. Contradictions, stale facts, orphans, dead sources. Recommends, changes nothing
+description: Health check. Contradictions, stale facts, orphans, dead sources, trial balance. Recommends, changes nothing
 ---
 
 You are running `/lint`. This operation recommends and changes no knowledge. `/consolidate` is the one that acts.
@@ -11,12 +11,15 @@ The one thing it does write is `wiki/status.md`, which is regenerated from front
 ```
 python3 .claude/scripts/fmquery.py --stale
 python3 .claude/scripts/fmquery.py --orphans
+python3 .claude/scripts/fmquery.py --balance
 python3 .claude/scripts/fmquery.py --dashboard
 python3 .claude/scripts/fmquery.py --eval
 python3 .claude/scripts/fmquery.py --rotate-log --dry-run
 ```
 
 A failed assertion in `--eval` outranks everything else in the report. It means a fact the owner relies on has changed or a page has drifted.
+
+An account without a posting in `--balance` comes next. A page changed with no journal entry is a fact nobody can trace, so the fix is a log entry saying when and why, written from what the page and git history show. Never invent the reason.
 
 ## 2. Check what a script cannot
 

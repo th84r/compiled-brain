@@ -7,7 +7,7 @@ hat: bridging
 created: 2026-01-01
 updated: 2026-01-01
 tags: [loop, automation, quality]
-related: [[brain-design.md]], [[skills-index.md]]
+related: [[design.md]], [[skills-index.md]]
 ---
 
 TL;DR. The loop runs the operations down a priority ladder while you work. Additive changes it makes, reductive changes it proposes. Driver in `.claude/loop.md`.
