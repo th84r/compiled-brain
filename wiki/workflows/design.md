@@ -7,7 +7,7 @@ hat: bridging
 created: 2026-01-01
 updated: 2026-01-01
 tags: [design, architecture, method]
-related: [[frontmatter-schema.md]], [[self-improvement.md]]
+related: ["[[frontmatter-schema.md]]", "[[self-improvement.md]]"]
 ---
 
 TL;DR. The library is kept like a set of books. Raw material is posted, each page is an account, the log is the journal, the dashboard is a balance sheet computed from the accounts, `--balance` proves journal and accounts agree, and nothing is ever rubbed out. Four things keep it honest, a generated dashboard, explicit reconciliation of contradictions, expiring inference, and machine-enforced schema. Full reasoning in `docs/ARCHITECTURE.md`.

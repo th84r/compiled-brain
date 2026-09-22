@@ -7,7 +7,7 @@ hat: bridging
 created: 2026-01-01
 updated: 2026-01-01
 tags: [skills, procedures, reuse]
-related: [[self-improvement.md]]
+related: ["[[self-improvement.md]]"]
 ---
 
 TL;DR. Procedures that worked, written down so they are not rediscovered. Check here before building anything. Added by `/distill-skill`.

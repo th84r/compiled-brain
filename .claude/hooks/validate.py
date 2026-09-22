@@ -91,6 +91,18 @@ def main():
                             f"Use one of {', '.join(STATUS_VALUES)} and put the "
                             "nuance in 'next_action'.")
 
+    # Wikilinks in frontmatter must be quoted, related: ["[[a]]", "[[b]]"].
+    # Unquoted, YAML reads them as lists inside lists and Obsidian sees no links.
+    if "/wiki/" in norm and os.path.isfile(fp):
+        t = open(fp, encoding="utf-8", errors="ignore").read().lstrip()
+        if t.startswith("---"):
+            e = t.find("\n---", 3)
+            for line in (t[3:e] if e != -1 else "").splitlines():
+                if re.match(r"^[A-Za-z_][A-Za-z0-9_]*:\s*\[\[", line):
+                    issues.append("Frontmatter has unquoted wikilinks (" + line.split(":")[0]
+                                  + "). Write them as [\"[[a]]\", \"[[b]]\"] so YAML and Obsidian read them as links.")
+                    break
+
     if issues:
         sys.stderr.write("Wiki validation (" + base + "):\n- "
                          + "\n- ".join(issues) + "\n")

@@ -133,7 +133,7 @@ review: YYYY-MM-DD                   # when volatile facts must be re-verified
 next_action: what happens next
 next_action_date: YYYY-MM-DD
 tags: [topic1, topic2]
-related: [[other-pages]]
+related: ["[[other-pages]]"]      # always quoted, or YAML and Obsidian see no links
 sources: [inbox/processed/2026-04/x.pdf]
 ---
 ```

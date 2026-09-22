@@ -12,7 +12,7 @@ review: 2026-06-01
 next_action: Send the abstract before the committee meets
 next_action_date: 2026-02-15
 tags: [example, talk, deadline]
-related: [[../../workflows/frontmatter-schema.md]]
+related: ["[[../../workflows/frontmatter-schema.md]]"]
 sources:
   - inbox/processed/2026-01/20260110-mail-committee-invitation.eml
 ---

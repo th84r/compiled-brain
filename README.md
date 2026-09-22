@@ -83,6 +83,8 @@ The books are plain Markdown with YAML frontmatter. Any editor opens them, any a
 
 The operations in `.claude/commands/` are written for Claude Code, but each one is an ordinary Markdown file of instructions. Any agent that can read files and run Python can follow them. `AGENTS.md` points agents that look for that file name to `CLAUDE.md`.
 
+The whole repository opens as an Obsidian vault as it is. Links in page bodies and in `related:` show up as backlinks and in the graph, so Obsidian can be the place you read and browse while the agent does the posting. Frontmatter wikilinks must be quoted for that to work, and the hook enforces it.
+
 What you would lose by switching agent is the automatic hook on every write. Run `validate.py` by hand or in a git pre-commit hook instead, and nothing else changes.
 
 ## Quickstart

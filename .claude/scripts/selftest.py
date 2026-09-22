@@ -99,6 +99,18 @@ rc, out = run([HOOK], json.dumps({"tool_input": {"file_path": bad, "content": "x
 check("hook rejects status outside schema", rc == 2 and "outside the schema" in out, out[:200])
 rc, out = run([HOOK], json.dumps({"tool_input": {"file_path": bad, "content": "a — b"}}))
 check("hook rejects em dash", rc == 2 and "em dash" in out, out[:200])
+# Unquoted wikilinks in frontmatter parse as nested lists, and Obsidian
+# then shows no links at all. The hook must reject them.
+qdir = os.path.join(tmp, "wiki", "cases", "q")
+os.makedirs(qdir, exist_ok=True)
+qpage = os.path.join(qdir, "overview.md")
+open(qpage, "w").write("---\ntitle: q\ntype: case\nstatus: active\nrelated: [[a.md]]\n---\n\nTL;DR. q\n")
+rc, out = run([HOOK], json.dumps({"tool_input": {"file_path": qpage, "content": "q"}}))
+check("hook rejects unquoted frontmatter wikilinks", rc == 2 and "unquoted" in out, out[:200])
+open(qpage, "w").write("---\ntitle: q\ntype: case\nstatus: active\nrelated: [\"[[a.md]]\"]\n---\n\nTL;DR. q\n")
+rc, out = run([HOOK], json.dumps({"tool_input": {"file_path": qpage, "content": "q"}}))
+check("hook accepts quoted frontmatter wikilinks", rc == 0, out[:200])
+
 # A .md outside wiki/ and output/, carrying content the hook would otherwise
 # reject. The old version used .txt, which the extension guard caught first,
 # so the path guard had no coverage at all and could be deleted unnoticed.

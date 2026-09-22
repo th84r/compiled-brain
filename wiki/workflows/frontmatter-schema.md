@@ -7,7 +7,7 @@ hat: bridging
 created: 2026-01-01
 updated: 2026-01-01
 tags: [schema, frontmatter, convention]
-related: [[design.md]]
+related: ["[[design.md]]"]
 ---
 
 TL;DR. Every main page carries YAML frontmatter. Dates are ISO, always. Enforced by `.claude/hooks/validate.py` on write and read by `.claude/scripts/fmquery.py`.
@@ -24,7 +24,7 @@ TL;DR. Every main page carries YAML frontmatter. Dates are ISO, always. Enforced
 | `created` | yes | YYYY-MM-DD |
 | `updated` | yes | YYYY-MM-DD |
 | `tags` | recommended | list |
-| `related` | optional | list of `[[wikilinks]]` |
+| `related` | optional | list of quoted wikilinks, `["[[a]]", "[[b]]"]`. The hook rejects unquoted ones |
 | `sources` | recommended | list of paths or URLs |
 
 ## Work fields, case and project only
