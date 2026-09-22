@@ -29,6 +29,11 @@ import zipfile
 
 W = r"[A-Za-zÀ-ɏ]"  # a letter, including accented and Nordic
 
+# Stands in for code spans and quotations that strip_noise removed. Rule 2
+# skips any sentence carrying it, because we deleted content from that
+# sentence and can no longer judge its length.
+SENTINEL = "elided"
+
 VOICE_FILE = os.path.normpath(os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "..", "..", "wiki", "workflows", "voice.md"))
@@ -73,22 +78,39 @@ def strip_noise(t):
     """
     # YAML frontmatter at the top of the file
     t = re.sub(r"\A---\n.*?\n---\n", "\n", t, flags=re.S)
-    # fenced and inline code
+    # Fenced code goes entirely. Inline code becomes a stand-in word rather
+    # than a gap, so "See `docs/x.md`." stays a sentence instead of
+    # collapsing to "See ." and reading as a two-word punchline.
     t = re.sub(r"```.*?```", " ", t, flags=re.S)
-    t = re.sub(r"`[^`\n]*`", " ", t)
+    t = re.sub(r"`[^`\n]*`", SENTINEL, t)
+    # a markdown link keeps its text and drops its target
+    t = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", t)
+    # emphasis markers are formatting
+    t = re.sub(r"\*\*|__|(?<!\w)[*_](?!\w)", "", t)
+    # headings are labels rather than prose
+    t = re.sub(r"^\s*#{1,6} .*$", " ", t, flags=re.M)
+    # A list marker becomes a paragraph break, so every item is its own
+    # paragraph. Stripping the marker in place made items two onward look
+    # like mid-paragraph sentences and fire rule 2 on every bullet list.
+    t = re.sub(r"^\s*(?:[-*+]|\d{1,3}[.)])\s+", "\n\n", t, flags=re.M)
     # markdown table rows and horizontal rules
     t = re.sub(r"^\s*\|.*$", " ", t, flags=re.M)
     # block quotes
     t = re.sub(r"^\s*>.*$", " ", t, flags=re.M)
     # quoted speech
     for pat in (r"«[^»]{0,800}»", r'"[^"]{0,800}"', r"\u201c[^\u201d]{0,800}\u201d"):
-        t = re.sub(pat, " ", t)
+        t = re.sub(pat, SENTINEL, t)
     return t
 
 
 def sentences(t):
     t = re.sub(r"\s+", " ", t)
     return [s.strip() for s in re.split(r"(?<=[.!?])\s+", t) if s.strip()]
+
+
+def paragraphs(t):
+    """Split on blank lines, so a wrapped line stays one paragraph."""
+    return [p for p in re.split(r"\n\s*\n", t) if p.strip()]
 
 
 # ------------------------------------------------------------------ mechanics
@@ -178,46 +200,69 @@ def load_extra():
         if not item:
             continue
         if len(item) > 2 and item.startswith("/") and item.endswith("/"):
-            out.append(("custom regex", item[1:-1]))
+            pat = item[1:-1]
+            try:
+                re.compile(pat)
+            except re.error as e:
+                # voice.md invites users to write regexes, so a bad one is an
+                # expected input. Name the bullet and carry on.
+                sys.stderr.write(f"  voice.md: skipping bad regex {item!r}, {e}\n")
+                continue
+            out.append(("custom regex", pat))
         else:
             out.append(("custom phrase", re.escape(item)))
     return out
 
 
 # ------------------------------------------------------------------- scanning
+# wiki/workflows/voice.md states the rules by quoting the banned phrases, so
+# it trips every one of them. Scanning the rulebook against itself is noise.
+SELF_EXEMPT = os.path.join("workflows", "voice.md")
+
+
 def scan(path, mail=False, strict=False):
     raw = read_any(path)
     t = strip_noise(raw)
     found = []
+
+    if path.replace("\\", "/").endswith(SELF_EXEMPT.replace("\\", "/")):
+        return [("exempt", "the rulebook quotes its own banned phrases")], len(raw.split()), []
 
     rules = MECHANICS + PATTERNS + load_extra() + (STRICT if strict else [])
     for label, pat in rules:
         for m in re.finditer(pat, t, re.M | re.I):
             found.append((label, m.group(0).strip()[:90]))
 
-    ss = sentences(t)
+    # Sentences are built paragraph by paragraph so that the index space of
+    # ss and of para_starts is the same one. Splitting the whole text and
+    # marking paragraph starts separately let the two drift apart, which
+    # silently switched rule 2 off for any file containing a heading.
+    ss, para_starts = [], set()
+    for para in paragraphs(t):
+        para_starts.add(len(ss))
+        ss.extend(sentences(para))
     lengths = [len(s.split()) for s in ss]
 
     # 2. Setup and punchline. A short stab right after a long sentence.
     # The first sentence of a paragraph is skipped, because a short opener is
-    # a sub-heading and not a punchline.
-    para_starts = set()
-    n = 0
-    for block in t.split("\n"):
-        for j, _ in enumerate(sentences(block)):
-            if j == 0:
-                para_starts.add(n)
-            n += 1
+    # a sub-heading rather than a punchline. Under three words is markdown
+    # residue such as a bare citation, so the floor keeps the rule honest.
     for i in range(1, len(ss)):
         if i in para_starts:
             continue
-        if lengths[i] <= 6 and lengths[i - 1] >= 18:
+        if SENTINEL in ss[i] or SENTINEL in ss[i - 1]:
+            continue
+        if 3 <= lengths[i] <= 6 and lengths[i - 1] >= 18:
             found.append(("2 setup/punchline", ss[i][:90]))
 
     # 4. The rule of three. Three parallel items of near-identical length,
     # where research shows the third is often a synonym of the second.
     for m in re.finditer(rf"\b({W}{{4,14}}), ({W}{{4,14}}),? and ({W}{{4,14}})\b", t):
-        a, b, c = (len(g) for g in m.groups())
+        words = [g.lower() for g in m.groups()]
+        # Three of the same word is a stand-in left by strip_noise, not a triad
+        if len(set(words)) < 3:
+            continue
+        a, b, c = (len(w) for w in words)
         if max(a, b, c) - min(a, b, c) <= 4:
             found.append(("4 rule of three", m.group(0)[:90]))
 
@@ -260,6 +305,9 @@ def main():
         if lengths:
             print(f"  sentence length {min(lengths)} to {max(lengths)}, "
                   f"spread {statistics.pstdev(lengths):.1f}")
+        if found and found[0][0] == "exempt":
+            print(f"  exempt, {found[0][1]}")
+            continue
         if not found:
             print("  CLEAN")
         else:

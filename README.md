@@ -127,11 +127,11 @@ Keep them apart and cross-reference. Duplicating between them is how they drift.
 
 Three machine checks, because conventions that depend on discipline stop working in month three.
 
-`hooks/validate.py` runs on every write to `wiki/` and refuses pages without `title`, `type`, or a `status` outside the schema.
+`hooks/validate.py` runs after every write to `wiki/` and reports a page that has no `title`, no `type`, or a `status` outside the schema. It runs on the main pages, meaning any `overview.md` and anything under `reference/`, `themes/` or `workflows/`, so working sub-documents stay free-form. It fires after the write rather than before, so it reports rather than blocks, which is what lets the agent fix the page in the same turn.
 
 `scripts/fmquery.py` drives the linter and the weekly review deterministically, so "what is overdue" is a query rather than a judgement call. It also searches the whole library including the log (`--search`, BM25, built in memory per call), runs deterministic fact assertions with no model involved (`--eval`), shows what links to what (`--links`), and keeps the log readable by archiving old months (`--rotate-log`).
 
-`scripts/voice.py` scans anything before it leaves the building, against the rules you set in `wiki/workflows/voice.md`. The shipped default catches em dashes and eleven sentence patterns that mark machine-written prose. A stricter mode adds mid-sentence colons for those who ban them.
+`scripts/voice.py` scans anything before it leaves the building, against the rules you set in `wiki/workflows/voice.md`. The shipped default catches em dashes, sentences opening with a conjunction, and ten of the eleven sentence patterns listed in `wiki/workflows/voice.md`. The eleventh, the earned closing aphorism, has no detector because telling a good last line from a generated one needs a reader. A stricter mode adds mid-sentence colons for those who ban them.
 
 ## Requirements
 

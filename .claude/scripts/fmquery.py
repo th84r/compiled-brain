@@ -10,11 +10,11 @@ Examples,
   fmquery.py --dashboard                   # regenerate wiki/status.md
   fmquery.py --stale                       # overdue review/expires + old active pages
   fmquery.py --type case --active --sort value --desc
-  fmquery.py --type case --hat example-hat
+  fmquery.py --type case --hat <hat>
   fmquery.py --orphans                     # pages with no inbound links
   fmquery.py --search "abstract deadline"  # ranked full-text search, pages and log
-  fmquery.py --search "slides" --hat example-hat --type case
-  fmquery.py --links cases/example-talk/overview.md
+  fmquery.py --search "slides" --hat <hat> --type case
+  fmquery.py --links cases/<case>/overview.md
   fmquery.py --eval                        # deterministic assertions, no model needed
   fmquery.py --rotate-log                  # move old log entries to wiki/log/YYYY-MM.md
   fmquery.py --rotate-log --dry-run
@@ -189,9 +189,13 @@ def outbound(fm):
         t = (m.group(1) or m.group(2) or "").strip()
         if not t or t.startswith(("http://", "https://")):
             continue
-        if m.group(2):
+        # A relative target is normalised whichever syntax it came in, so
+        # [[../../workflows/x.md]] and ](../../workflows/x.md) resolve alike.
+        # Normalising only the markdown form made backlinks asymmetric.
+        if m.group(2) or "/" in t:
             t = os.path.normpath(os.path.join(base, t)).replace("\\", "/")
         out.add(t)
+        out.add(os.path.splitext(t)[0])
     return out
 
 
@@ -423,7 +427,11 @@ def rotate_log(dry_run=False):
     orig_lines = txt.count("\n")
     new_main = header + "".join(stay)
     moved_lines = sum(e.count("\n") for es in move.values() for e in es)
-    assert new_main.count("\n") + moved_lines == orig_lines, "line count mismatch, aborting"
+    # A plain assert disappears under python3 -O, and this is the one
+    # operation in the repo that rewrites an append-only file. It raises.
+    if new_main.count("\n") + moved_lines != orig_lines:
+        raise SystemExit("rotate-log aborted, line count does not reconcile. "
+                         "Nothing was written.")
 
     print(f"# rotate-log  keep {sorted(keep)}  stay {len(stay)}  "
           f"move {sum(len(v) for v in move.values())} across {len(move)} months"

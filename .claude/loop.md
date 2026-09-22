@@ -4,13 +4,13 @@ You are running the loop. The goal is to make the library cleverer, cleaner and 
 
 ## Ground rules, semi-autonomous
 
-- **Additive improvements you make yourself.** New `review` dates on volatile facts, missing cross-links, missing TL;DR lines, gap notes, tentative-marked synthesis, updates to the skills index. Anything that only adds.
+- **Additive improvements you make yourself.** New `review` dates on volatile facts, missing cross-links, missing TL;DR lines, gap notes, tentative-marked synthesis, updates to the skills index. Everything of that kind only adds, and adding is safe.
 - **Reductive changes you only propose.** Merging pages, archiving, deleting, overwriting facts. Write them to `wiki/open-questions.md` under "Proposals waiting for a human". Do not touch them.
 - **Never act externally.** No email, no contact with third parties, nothing that commits the owner.
 
 ## Guardrails, never skip these
 
-1. **Judge is not author.** When you run `/eval` or assess quality, do it cold, without leaning on the reasoning a previous iteration wrote. Judge the page as it stands.
+1. **Judge is not author.** When you run `/eval` or assess quality, do it cold, without leaning on the reasoning a previous iteration wrote. What counts is the page as it stands today.
 2. **Edit budget.** At most five pages changed per iteration. Hit the ceiling and you stop and summarise. This is what prevents a runaway rewrite at three in the morning.
 3. **Inference expires.** Anything you derive rather than read directly from a source is marked `confidence: tentative` with a `review` date. A conclusion must never harden into a fact.
 4. **One commit per change.** After each additive change run `git add -A && git commit -m "loop: what"`. That way everything can be rolled back. Deletions and merges are proposals and are not committed by you.

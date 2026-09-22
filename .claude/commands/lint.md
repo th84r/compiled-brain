@@ -2,7 +2,9 @@
 description: Health check. Contradictions, stale facts, orphans, dead sources. Recommends, changes nothing
 ---
 
-You are running `/lint`. This operation recommends and never changes. `/consolidate` is the one that acts.
+You are running `/lint`. This operation recommends and changes no knowledge. `/consolidate` is the one that acts.
+
+The one thing it does write is `wiki/status.md`, which is regenerated from frontmatter and holds nothing that is not derived from the pages themselves.
 
 ## 1. Run the deterministic checks
 

@@ -84,11 +84,11 @@ Now edit, in this order. Each step names the file and what changes.
 
 2. **`CLAUDE.md`.** Replace every `<placeholder>`. Rewrite the opening paragraph from answer 1. Write the hats list from answer 2, and add the note about which ones nobody chases. Rewrite the quality filter from answer 6 with their examples. Add a confidentiality paragraph from answer 7 if there was anything. Set the ingest naming pattern from answer 5. Adjust the intent table so the examples use their words for the unit of work.
 
-3. **`wiki/hats/`.** One router page per hat, using the template in `wiki/hats/README.md`. Delete `example-hat.md`.
+3. **`wiki/hats/`.** One router page per hat, using the template in `wiki/hats/README.md`. Delete `example-hat.md`, and replace its line under Hats in `wiki/index.md` with one line per real hat.
 
 4. **`.claude/commands/new-case.md`.** Replace the section template with the sections from answer 4, in their words. If they call the unit of work something other than a case, say so at the top of the command and note that the folder is still `wiki/cases/`, renaming it is possible but touches the scripts.
 
-5. **The example.** Delete `wiki/cases/example-talk/`. Write one fictional page in their domain, using the sections from step 4, with invented names and invented numbers. It exists so the dashboard renders something and so the shape is visible. Say in its TL;DR that it is fictional and should be deleted.
+5. **The example.** Delete `wiki/cases/example-talk/`, and any line in `wiki/index.md` that points at it. Write one fictional page in their domain, using the sections from step 4, with invented names and invented numbers. It exists so the dashboard renders something and so the shape is visible. Say in its TL;DR that it is fictional and should be deleted.
 
 6. **`wiki/workflows/voice.md`.** Rewrite "How you actually sound" from answer 8. If they pasted emails, describe the traits you actually see in them, openings, hedges, asides, length, how they end. Rewrite the "Why this exists" reason from answer 7. Add banned phrases if any came up. If the language is not English, note that the shipped patterns in `voice.py` are English and that the mechanics still apply.
 

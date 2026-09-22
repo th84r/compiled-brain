@@ -21,7 +21,7 @@ The less obvious one is credibility. If a document that leaves your organisation
 
 ## Mechanics
 
-No em dashes. No colons inside sentences, they belong in headings, frontmatter and tables. Write accented and non-ASCII characters directly rather than transliterating.
+No em dashes. No sentence opening with a conjunction. Colons inside sentences are an opt-in house rule, see the calibration note below. Write accented and non-ASCII characters directly rather than transliterating.
 
 ## The patterns that give machine prose away
 

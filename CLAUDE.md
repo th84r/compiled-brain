@@ -10,7 +10,7 @@ Everything in `<angle brackets>` is a placeholder. The fastest way to replace al
 
 A self-developing knowledge base covering <your name>'s work across <domain>. It grows sharper over time as raw material is fed in and compiled into structured knowledge.
 
-**Hats.** You wear several. Each one is a context with its own people, deadlines and tempo. The library serves all of them from one place, and the `hat` field in frontmatter is what keeps them separable without splitting the library into silos.
+**Hats.** You wear several. Each one is a context with its own people, its own deadlines, its own tempo. The library serves all of them from one place, and the `hat` field in frontmatter is what keeps them separable without splitting the library into silos.
 
 - `<hat-one>`, <one line: what this role is>
 - `<hat-two>`, <one line>
@@ -71,7 +71,7 @@ The two build on each other. Do not duplicate. Rule of thumb:
 ├── .claude/          commands/, hooks/, scripts/
 ```
 
-The hat dimension lives in the `hat` field in frontmatter rather than in separate libraries. The same wiki, inbox and output serve every hat, so knowledge cross-links across them. That is the point.
+The hat dimension lives in the `hat` field in frontmatter rather than in separate libraries. Every hat is served by the same wiki, the same inbox and the same output folder, so knowledge cross-links across them, which is the whole reason for keeping one library.
 
 ---
 
@@ -95,9 +95,21 @@ The self-reinforcing loop (`/loop`, driver in `.claude/loop.md`) runs the operat
 
 Adapt this section to your work. It is the main defence against a library that fills with noise.
 
-**Belongs:** decisions and the reasoning behind them, outcomes of meetings and what the people involved want, figures and facts you will be asked about again, developments in your field that change what is true, findings and methods with value beyond the case they came from, people's roles.
+**Belongs.**
 
-**Does not belong:** ordinary correspondence without substance, raw material without analysis, active correspondence still in flow (keep as `inbox/processed` until it has concluded), anything already in agent memory.
+- Decisions, and the reasoning behind them
+- What happened in a meeting, and what each person there wanted
+- Any figure you will be asked about again
+- Developments in your field that change what is true
+- A finding or a method with value beyond the case it came from
+- Who people are and what they decide
+
+**Does not belong.**
+
+- Ordinary correspondence with no substance in it
+- Raw material nobody has read yet
+- Live correspondence still in flow, which stays in `inbox/processed` until it has concluded
+- Anything already held in agent memory
 
 ---
 
@@ -108,7 +120,7 @@ Every wiki page carries YAML frontmatter. Dates are always ISO (YYYY-MM-DD), nev
 ```yaml
 ---
 title: Case title or subject
-type: case | project | person | reference | workflow
+type: case | project | person | organization | reference | workflow
 status: active | waiting | on_hold | closed
 confidence: verified | tentative     # how much may be asserted
 hat: <hat-one> | <hat-two> | bridging
@@ -136,7 +148,7 @@ Full schema per type in `wiki/workflows/frontmatter-schema.md`. Enforced by `.cl
 
 ## The log
 
-`wiki/log.md` is append-only and is the audit trail. It answers "when did we learn this". It also grows without bound, so `fmquery.py --rotate-log` moves entries older than two months into `wiki/log/YYYY-MM.md`, whole and in order. Run it monthly. Search covers the archives, so nothing becomes unfindable.
+`wiki/log.md` is append-only and is the audit trail. It answers "when did we learn this". It also grows without bound, so `fmquery.py --rotate-log` moves entries older than two months into `wiki/log/YYYY-MM.md`, whole and in order. Run it monthly, and search covers the archives so nothing becomes unfindable.
 
 ## Memory lifecycle
 
@@ -152,7 +164,7 @@ The shipped defaults:
 
 - **No contrast constructions** of the type "X, not Y" or "it is not X, it is Y". A classic machine tell. State the positive claim and let the contrast follow from the substance.
 - **No em dashes.** Use a comma, a full stop, or rewrite.
-- **No colons inside sentences.** Colons belong in headings, frontmatter and tables.
+- **No colons inside sentences**, if you hold that view. Colons belong in headings, frontmatter and tables. This one is opt-in, `voice.py --strict` checks it and the plain run does not, because a colon introducing a list is ordinary English.
 - **Concrete before abstract.** Numbers, names, dates before generalisations.
 
 Run `python3 .claude/scripts/voice.py <file>` before anything ships.

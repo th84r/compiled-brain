@@ -29,7 +29,7 @@ Each iteration takes the highest rung that has work, does one task, commits, and
 7. Capability, distil a procedure that worked
 8. Eval against the golden set
 
-## The four guardrails
+## The five guardrails
 
 **Judge is not author.** Quality assessment is done cold, without leaning on the reasoning a previous iteration wrote. A model grading its own earlier work grades generously.
 
@@ -38,6 +38,8 @@ Each iteration takes the highest rung that has work, does one task, commits, and
 **Inference expires.** Everything derived is `tentative` with a `review` date.
 
 **One commit per change.** Git is the undo button, and it only works if the commits are granular.
+
+**Numbers, names, dates and legal wording are copied exactly.** Compression targets redundancy and prose, never facts. Recall over precision. This is the guardrail that protects the content while the others protect the structure.
 
 ## When it goes wrong
 
