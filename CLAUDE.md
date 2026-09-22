@@ -40,11 +40,11 @@ Hand-written overviews rot, so at the start of every working session:
 
 **This is bookkeeping.** Raw material (emails, documents, data, meeting notes) is what gets posted. The wiki is the books. `log.md` is the journal, each page is an account, `status.md` is the trial balance computed from the accounts, and a fact that changes gets a correcting entry rather than an eraser.
 
-The rule underneath everything: **you never rub anything out.** When a price, a date, a status or a role changes, the old value stays with its date and the new one is written beside it. That is what lets the library answer "what was true in March" a year later.
+The rule underneath everything is that **you never rub anything out.** When a price, a date, a status or a role changes, the old value stays with its date and the new one is written beside it. That is what lets the library answer "what was true in March" a year later.
 
 **Two zones.**
 
-1. **The working directory** is the active workspace. Raw material lands in `inbox/`, is compiled into `wiki/`, artefacts are created in `output/`.
+1. **The working directory** is the active workspace. Raw material lands in `inbox/`, is posted into `wiki/`, artefacts are created in `output/`.
 2. **Agent memory** is long-term knowledge about the person: role, preferences, contacts, pitfalls. Maintained automatically across conversations.
 
 The two build on each other. Do not duplicate. Rule of thumb:
@@ -60,7 +60,7 @@ The two build on each other. Do not duplicate. Rule of thumb:
 <project-root>/
 ├── CLAUDE.md, README.md
 ├── inbox/            RAW MATERIAL    pending/ -> processed/{YYYY-MM}/ -> archive/
-├── wiki/             COMPILED KNOWLEDGE
+├── wiki/             THE BOOKS
 │   ├── index.md      master table of contents, the router, read it first
 │   ├── log.md        append-only operations log
 │   ├── status.md     GENERATED, never edit by hand
@@ -186,7 +186,7 @@ When ambiguous, pick the most likely workflow and confirm briefly before continu
 
 ## When you recognise intent, act
 
-If a request surfaces something that belongs in the wiki, compile it too, without asking permission for each step.
+If a request surfaces something that belongs in the wiki, post it too, without asking permission for each step.
 
 **Exceptions where you confirm first:**
 

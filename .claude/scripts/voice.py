@@ -85,7 +85,9 @@ MECHANICS = [
 # because it is a crutch that lets a sentence avoid deciding its own shape.
 # Turn it on if that is your view.
 STRICT = [
-    ("mid-sentence colon", rf"{W}: {W}"),
+    # Also catches a colon followed by markdown emphasis, which the plain
+    # letter-colon-letter form missed.
+    ("mid-sentence colon", rf"{W}: (?:\*\*|\*|_)?{W}"),
 ]
 
 # ------------------------------------------------------- sentence-level tells

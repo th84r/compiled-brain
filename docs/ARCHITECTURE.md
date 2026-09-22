@@ -10,19 +10,19 @@ A professional working across several roles accumulates knowledge faster than th
 
 A folder of notes fails because nothing connects and nothing is current. A wiki fails because maintaining it is a second job. Handing everything to a model with a long context fails because the model has no memory between sessions and no way to tell what it verified from what it guessed.
 
-What works is treating the library as compiled output from a pipeline, with the model as the compiler and a small amount of machinery enforcing the invariants.
+What works is keeping the library the way a bookkeeper keeps the books. Every entry dated and referenced, nothing rubbed out, the summary computed from the entries rather than written, and a small amount of machinery enforcing those rules so they do not depend on discipline.
 
 ## The bookkeeping model
 
 Raw material is what gets posted. The wiki is the books.
 
-The metaphor is double-entry bookkeeping rather than a compiler, and the difference matters. **A compiler has no memory.** It translates what is in front of it and does not care what it translated last time. The most distinctive discipline here is the opposite: new material is held against what is already recorded, and a fact that has changed keeps its old value with a date.
+The metaphor is double-entry bookkeeping rather than a compiler, and the difference matters. **A compiler has no memory.** It translates what is in front of it and does not care what it translated last time. The most distinctive discipline here is the opposite. New material is held against what is already recorded, and a fact that has changed keeps its old value with a date.
 
 Bookkeeping is the only human system that solved exactly this, a record many people depend on where the facts change and someone must be able to reconstruct any past state. The answer since 1494 has been the same. You never rub anything out, you post a correction.
 
-This has a consequence people usually miss. **You do not edit the build artefact to record something new.** You put the new thing in `inbox/` and run the compile step, which reads it, decides where it belongs, reconciles it against what is already known, and writes it in with a date and a source. The discipline lives in the pipeline rather than in the person.
+This has a consequence people usually miss. **You do not edit an account to record something new. You post an entry.** The new thing goes in `inbox/`, and the posting step reads it, decides which accounts it touches, reconciles it against what is already recorded, and writes it in with a date and a reference. The discipline lives in the posting rather than in the person.
 
-It has a second consequence. A compiled artefact can be rebuilt. If your schema changes, you can regenerate the parts that depend on it. This is why `status.md` is generated rather than written: it is the part of the library most likely to be wrong, so it is the part that never gets written by hand.
+It has a second consequence. **A trial balance is recomputed, never kept.** Anything derived from the accounts can be struck again from the accounts whenever they change. This is why `status.md` is generated rather than written. It is the part of the library most likely to be wrong, so it is the part that never gets written by hand.
 
 ## The four failure modes and their counters
 

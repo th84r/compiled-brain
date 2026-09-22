@@ -1,5 +1,5 @@
 ---
-description: Read new raw material from inbox/pending, compile into the wiki, archive the source
+description: Read new raw material from inbox/pending, post it to the wiki, archive the source
 ---
 
 You are running `/ingest`. Follow these steps exactly.

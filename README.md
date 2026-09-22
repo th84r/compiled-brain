@@ -26,7 +26,7 @@ That single rule is what this repository implements for knowledge, and the corre
 
 ## How material gets in
 
-Treat raw material as source code. Emails, meeting notes, reports, datasets, drafts. Treat the language model as the thing that posts it. Treat the wiki as the books. The wiki is never where you dump things. It is where things end up after they have been read, filtered, reconciled against what you already knew, and written down with a date on them.
+Raw material is what gets posted. Emails, meeting notes, reports, datasets, drafts. The language model is the clerk that posts it. The wiki is the books. The wiki is never where you dump things. It is where things end up after they have been read, filtered, reconciled against what you already knew, and written down with a date on them.
 
 The structural pattern comes from Andrej Karpathy's LLM-wiki sketch. What this repository adds is the bookkeeping discipline that keeps it honest once it is more than a weekend project: a schema, a validation hook, a generated dashboard, an append-only journal, and the rule that facts get invalidated rather than overwritten.
 
@@ -46,7 +46,7 @@ Four failure modes, and what this does about each.
 
 ```
 CLAUDE.md                  The brain's own instructions. Read first, edit to fit you.
-wiki/                      Compiled knowledge
+wiki/                      The books
   index.md                 Table of contents and router
   log.md                   Append-only operations log
   status.md                GENERATED. Never edit by hand.

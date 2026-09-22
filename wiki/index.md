@@ -25,7 +25,7 @@ Who is who, their role and how they operate. See `people/`.
 
 ## Reference
 
-Compiled knowledge about your field, reference figures, standing facts. See `reference/`.
+Standing knowledge about your field, reference figures, facts that hold across cases. See `reference/`.
 
 - `reference/eval-set.md`, the golden questions the library should be able to answer
 - `reference/output-artefakter.md`, the register of finished deliverables
