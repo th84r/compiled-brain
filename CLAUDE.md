@@ -38,7 +38,9 @@ Hand-written overviews rot, so at the start of every working session:
 
 ## Mental model
 
-**The model is a compiler.** Raw material (emails, documents, data, meeting notes) is source code. The wiki is compiled output. It grows organically as new material is embedded and cross-linked.
+**This is bookkeeping.** Raw material (emails, documents, data, meeting notes) is what gets posted. The wiki is the books. `log.md` is the journal, each page is an account, `status.md` is the trial balance computed from the accounts, and a fact that changes gets a correcting entry rather than an eraser.
+
+The rule underneath everything: **you never rub anything out.** When a price, a date, a status or a role changes, the old value stays with its date and the new one is written beside it. That is what lets the library answer "what was true in March" a year later.
 
 **Two zones.**
 

@@ -1,16 +1,34 @@
-# compiled-brain
+# doubleentry
 
-A knowledge base that compiles itself. Raw material goes in, structured knowledge comes out, and the structure is enforced by machine rather than by good intentions.
+Double-entry bookkeeping for what you know. Raw material in, dated and sourced knowledge out, nothing ever erased.
 
 Built for people who do professional work across several roles at once and need one library that serves all of them.
 
 ---
 
-## The idea in one paragraph
+## Why bookkeeping
 
-Treat raw material as source code. Emails, meeting notes, reports, datasets, drafts. Treat the language model as a compiler. Treat the wiki as compiled output. The wiki is never where you dump things. It is where things end up after they have been read, filtered, reconciled against what you already knew, and written down with a date on them.
+Accounting solved this problem in 1494. How do you keep a record that many people depend on, where the facts change over time, and where someone has to be able to reconstruct what was true on any given date.
 
-The pattern comes from Andrej Karpathy's LLM-wiki sketch. What this repository adds is the machinery that keeps it honest once it is more than a weekend project: a schema, a validation hook, a generated dashboard, an append-only log, and a rule that facts get invalidated rather than overwritten.
+The answer has not improved in five centuries. **You never rub anything out. You post a correction.**
+
+That single rule is what this repository implements for knowledge, and the correspondence is closer than an analogy.
+
+| Bookkeeping | Here |
+|---|---|
+| The journal, chronological and append-only | `wiki/log.md` |
+| One account per thing | One page per case, project or person |
+| Posting an entry | `/ingest`, where new material is reconciled against old |
+| The trial balance, computed and never written | `wiki/status.md` |
+| A correcting entry, because you never rub out | Supersede with a date rather than overwrite |
+| A reference and a date on every entry | A source and a date on every fact |
+| The auditor | `fmquery.py --eval`, assertions with no model involved |
+
+## How material gets in
+
+Treat raw material as source code. Emails, meeting notes, reports, datasets, drafts. Treat the language model as the thing that posts it. Treat the wiki as the books. The wiki is never where you dump things. It is where things end up after they have been read, filtered, reconciled against what you already knew, and written down with a date on them.
+
+The structural pattern comes from Andrej Karpathy's LLM-wiki sketch. What this repository adds is the bookkeeping discipline that keeps it honest once it is more than a weekend project: a schema, a validation hook, a generated dashboard, an append-only journal, and the rule that facts get invalidated rather than overwritten.
 
 ## Why most second brains rot
 
@@ -52,8 +70,8 @@ docs/MEMORY-ZONE.md        The second zone, which lives outside the repo
 ## Quickstart
 
 ```bash
-git clone https://github.com/<you>/compiled-brain.git my-brain
-cd my-brain
+git clone https://github.com/th84r/doubleentry.git my-books
+cd my-books
 python3 .claude/scripts/selftest.py              # every check should say ok
 python3 .claude/scripts/fmquery.py --dashboard   # writes wiki/status.md
 python3 .claude/scripts/fmquery.py --search "abstract"
@@ -93,7 +111,7 @@ Five constraints carry most of the value. The folder layout carries very little 
 
 **A generated dashboard beats a written one.** `fmquery.py --dashboard` regenerates `wiki/status.md` in seconds. Start every session with it.
 
-**Facts get invalidated rather than overwritten.** Keep the old value with a date next to the new one.
+**Facts get invalidated rather than overwritten.** Keep the old value with a date next to the new one. This is the correcting entry, and it is the rule the whole thing rests on.
 
 **Inference expires.** Anything derived is `tentative` with a `review` date.
 

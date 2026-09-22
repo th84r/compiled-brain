@@ -14,6 +14,6 @@ Write in full sentences. A log line that only makes sense to the person who wrot
 
 Opened `cases/example-talk/` from the committee's invitation. Abstract due 15 February, slides 1 October, co-presenter offered the second half. Delete this entry together with the example page once you have your own.
 
-## 2026-01-10 setup | Library initialised from the compiled-brain template
+## 2026-01-10 setup | Library initialised from the doubleentry template
 
 Hats, quality filter and voice rules still carry the template placeholders.

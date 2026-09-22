@@ -12,9 +12,13 @@ A folder of notes fails because nothing connects and nothing is current. A wiki 
 
 What works is treating the library as compiled output from a pipeline, with the model as the compiler and a small amount of machinery enforcing the invariants.
 
-## The compiler model
+## The bookkeeping model
 
-Raw material is source code. The wiki is the build artefact.
+Raw material is what gets posted. The wiki is the books.
+
+The metaphor is double-entry bookkeeping rather than a compiler, and the difference matters. **A compiler has no memory.** It translates what is in front of it and does not care what it translated last time. The most distinctive discipline here is the opposite: new material is held against what is already recorded, and a fact that has changed keeps its old value with a date.
+
+Bookkeeping is the only human system that solved exactly this, a record many people depend on where the facts change and someone must be able to reconstruct any past state. The answer since 1494 has been the same. You never rub anything out, you post a correction.
 
 This has a consequence people usually miss. **You do not edit the build artefact to record something new.** You put the new thing in `inbox/` and run the compile step, which reads it, decides where it belongs, reconciles it against what is already known, and writes it in with a date and a source. The discipline lives in the pipeline rather than in the person.
 
