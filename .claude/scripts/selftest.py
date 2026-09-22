@@ -80,6 +80,25 @@ open(v, "w").write("The meeting is on Tuesday. Bring the slides and the two hand
 rc, out = run([VOICE, v])
 check("voice passes clean prose", "CLEAN" in out, out[:200])
 
+# Every one of these was an unhandled traceback once. A public template gets
+# pointed at the wrong file constantly, so each failure must be a sentence.
+bad = os.path.join(os.path.dirname(v), "bin.txt")
+open(bad, "wb").write(b"\xa8\xff\xfe binary")
+rc, out = run([VOICE, bad])
+check("voice survives a binary file", "SKIPPED" in out and "binary" in out, out[:200])
+fake = os.path.join(os.path.dirname(v), "fake.docx")
+open(fake, "wb").write(b"PK\x03\x04 not really a zip")
+rc, out = run([VOICE, fake])
+check("voice survives a corrupt .docx", "SKIPPED" in out and "zip" in out, out[:200])
+empty_docx = os.path.join(os.path.dirname(v), "empty.docx")
+import zipfile as _zf
+with _zf.ZipFile(empty_docx, "w") as _z:
+    _z.writestr("a.txt", "x")
+rc, out = run([VOICE, empty_docx])
+check("voice survives a .docx with no document.xml", "SKIPPED" in out, out[:200])
+rc, out = run([VOICE, os.path.join(os.path.dirname(v), "nope.md")])
+check("voice survives a missing file", "SKIPPED" in out and "no such file" in out, out[:200])
+
 for f in ("CLAUDE.md", "README.md", "docs/ARCHITECTURE.md", "docs/ONBOARDING.md",
           ".claude/commands/onboard.md", ".claude/settings.json",
           "wiki/index.md", "wiki/log.md", "wiki/reference/eval-set.md"):

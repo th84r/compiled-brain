@@ -35,13 +35,32 @@ VOICE_FILE = os.path.normpath(os.path.join(
 
 
 # --------------------------------------------------------------------- input
+class Unreadable(Exception):
+    """The file cannot be read as prose. Say why, do not raise a stack trace."""
+
+
 def read_any(path):
+    """Text from .md, .txt or .docx.
+
+    Every failure here is a user pointing the tool at the wrong file, so each
+    one gets a sentence rather than a traceback.
+    """
+    if not os.path.isfile(path):
+        raise Unreadable("no such file")
     if path.endswith(".docx"):
-        with zipfile.ZipFile(path) as z:
-            x = z.read("word/document.xml").decode("utf-8")
+        try:
+            with zipfile.ZipFile(path) as z:
+                x = z.read("word/document.xml").decode("utf-8", errors="replace")
+        except zipfile.BadZipFile:
+            raise Unreadable("not a readable .docx, the file is not a zip archive")
+        except KeyError:
+            raise Unreadable("not a readable .docx, it has no word/document.xml")
         x = re.sub(r"</w:p>", "\n", x)
         return re.sub(r"[ \t]+", " ", re.sub(r"<[^>]+>", "", x))
-    return open(path, encoding="utf-8").read()
+    try:
+        return open(path, encoding="utf-8").read()
+    except UnicodeDecodeError:
+        raise Unreadable("not UTF-8 text, this looks like a binary file")
 
 
 def strip_noise(t):
@@ -231,7 +250,12 @@ def main():
     strict = "--strict" in sys.argv
     worst = 0
     for path in args:
-        found, words, lengths = scan(path, mail, strict)
+        try:
+            found, words, lengths = scan(path, mail, strict)
+        except Unreadable as e:
+            print(f"\n{os.path.basename(path)}  SKIPPED, {e}")
+            worst = max(worst, 3)
+            continue
         print(f"\n{os.path.basename(path)}  {words} words, {len(lengths)} sentences")
         if lengths:
             print(f"  sentence length {min(lengths)} to {max(lengths)}, "
