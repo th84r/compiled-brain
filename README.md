@@ -97,16 +97,19 @@ The operations in `.claude/commands/` are written for Claude Code, but each one 
 
 The whole repository opens as an Obsidian vault as it is. Links in page bodies and in `related:` show up as backlinks and in the graph, so Obsidian can be the place you read and browse while the agent does the posting. Frontmatter wikilinks must be quoted for that to work, and the hook enforces it.
 
-What you would lose by switching agent is the automatic hook on every write. Run `validate.py` by hand or in a git pre-commit hook instead, and nothing else changes.
+What you would lose by switching agent is the automatic hook on every write. Run `python3 .claude/hooks/validate.py <files>` by hand, or `python3 .claude/hooks/validate.py --staged` in a git pre-commit hook, and nothing else changes.
 
 ## Quickstart
 
 ```bash
 git clone https://github.com/th84r/pacioli.git my-books
 cd my-books
-git remote remove origin                         # your books stay on this machine
-python3 .claude/scripts/selftest.py              # every check should say ok
-python3 .claude/scripts/fmquery.py --dashboard   # writes wiki/status.md
+# your books stay on this machine
+git remote remove origin
+# every check should say ok, and the last line ALL PASSED
+python3 .claude/scripts/selftest.py
+# writes wiki/status.md
+python3 .claude/scripts/fmquery.py --dashboard
 python3 .claude/scripts/fmquery.py --search "abstract"
 ```
 

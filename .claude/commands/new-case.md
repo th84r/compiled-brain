@@ -32,7 +32,7 @@ Sub-documents (chronology, preparation, analysis) go in the same folder and do n
 
 ## 4. Wire it in
 
-Add it to `wiki/index.md` and to the relevant `wiki/hats/` router. Cross-link from any related case. Run the dashboard.
+Add it to `wiki/index.md` and to the relevant `wiki/hats/` router. Cross-link from any related case. Add one entry to `wiki/log.md`, headed `## YYYY-MM-DD new-case | title (initials)`, that names the new page and every page you linked it from, otherwise it shows up as out of balance in `fmquery.py --balance`. Run the dashboard.
 
 ## 5. Run a gap scan
 

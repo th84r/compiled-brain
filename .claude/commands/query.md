@@ -22,6 +22,6 @@ If the library cannot answer, say so plainly and say what is missing. A gap name
 
 ## 4. Save what has lasting value
 
-If the answer required real synthesis and would be useful again, write it into the wiki as a new page or a new section on an existing one. Mark derived conclusions `confidence: tentative` with a `review` date.
+If the answer required real synthesis and would be useful again, write it into the wiki as a new page or a new section on an existing one. Mark derived conclusions `confidence: tentative` with a `review` date. Add one entry to `wiki/log.md`, headed `## YYYY-MM-DD query | title (initials)`, that names every page you created or changed.
 
 Ephemeral answers stay in the conversation. Do not clutter the library with them.

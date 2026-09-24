@@ -135,8 +135,10 @@ def resolve_date(s):
 def load_pages():
     pages = []
     for root, _, files in os.walk(WIKI):
-        r = root.replace("\\", "/")
-        if "/assets" in r or "/wiki/log" in r:
+        # Judge the folder by its path inside wiki/, so a case called
+        # assets-sale or a folder called logistics is still read.
+        parts = os.path.relpath(root, WIKI).replace("\\", "/").split("/")
+        if "assets" in parts or parts[0] == "log":
             continue
         for fn in files:
             if not fn.endswith(".md") or fn in ("index.md", "log.md", "status.md"):
@@ -203,15 +205,23 @@ def outbound(fm):
 def links_for(pages, target):
     target = target.replace("\\", "/")
     stem = os.path.splitext(os.path.basename(target))[0]
-    folder = target.split("/")[0]
+    no_ext = os.path.splitext(target)[0]
+    # A generic name such as overview.md says nothing on its own, so only a
+    # link to the page's own path or its own folder counts for it.
+    generic = stem.lower() in GENERIC_STEMS
+    folder = os.path.dirname(target) if generic else target.split("/")[0]
     me = next((p for p in pages if p["_path"] == target), None)
     inbound = []
     for p in pages:
         if p["_path"] == target:
             continue
         o = outbound(p)
-        if (target in o or stem in o or any(x.endswith("/" + stem) for x in o)
-                or any(x.rstrip("/") == folder for x in o)):
+        if generic:
+            hit = target in o or no_ext in o or any(x.rstrip("/") == folder for x in o)
+        else:
+            hit = (target in o or stem in o or any(x.endswith("/" + stem) for x in o)
+                   or any(x.rstrip("/") == folder for x in o))
+        if hit:
             inbound.append(p["_path"])
     return me, sorted(inbound), sorted(outbound(me)) if me else []
 
@@ -251,9 +261,11 @@ def find_orphans(pages, include_archive=False):
                 continue
             t = t.replace("\\", "/").lstrip("./")
             targets.add(t)
+            targets.add(os.path.splitext(t)[0])
             targets.add(os.path.splitext(os.path.basename(t))[0])
             if "/" in t:
                 targets.add(t.split("/")[0])
+                targets.add(os.path.dirname(t))
     # Only specific sub-paths count as coverage, such as "cases/acme-review".
     # A bare top-level "cases/" does not cover everything inside it, otherwise
     # every page is automatically linked and the check always returns zero.
@@ -268,7 +280,21 @@ def find_orphans(pages, include_archive=False):
         stem = os.path.splitext(os.path.basename(path))[0]
         no_ext = os.path.splitext(path)[0]
         folder = os.path.dirname(path)
-        if (stem in targets or path in targets or no_ext in targets
+        if stem.lower() in GENERIC_STEMS:
+            # Every case is an overview.md, so the bare name proves nothing.
+            # A link counts if it ends in this page's path or its folder,
+            # which also catches relative links such as ../acme/overview.md.
+            parts = no_ext.split("/")
+            tails = {"/".join(parts[k:]) for k in range(len(parts))}
+            tails |= {t + ".md" for t in tails}
+            if folder.count("/") >= 1:
+                fparts = folder.split("/")
+                tails |= {"/".join(fparts[k:]) for k in range(len(fparts))}
+            tails.discard(stem)
+            tails.discard(stem + ".md")
+            if tails & targets:
+                continue
+        elif (stem in targets or path in targets or no_ext in targets
                 or (folder.count("/") >= 1 and folder in targets)):
             continue
         out.append(fm)

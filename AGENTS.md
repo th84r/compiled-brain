@@ -4,4 +4,4 @@ This repository is a knowledge library, and its instructions for any agent worki
 
 The operations are Markdown files in `.claude/commands/`. Read the one that matches the task and carry out its steps. The checks are plain Python in `.claude/scripts/` and need no particular model.
 
-If your environment does not run `.claude/hooks/validate.py` automatically after each write, run it yourself on every page you change, or install it as a git pre-commit hook.
+If your environment does not run `.claude/hooks/validate.py` automatically after each write, run `python3 .claude/hooks/validate.py <files>` on every page you change, or put `python3 .claude/hooks/validate.py --staged` in a git pre-commit hook. Both exit 1 when a rule is broken.

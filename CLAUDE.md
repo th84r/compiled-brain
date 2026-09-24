@@ -156,7 +156,7 @@ Full schema per type in `wiki/workflows/frontmatter-schema.md`. Enforced by `.cl
 
 ## Memory lifecycle
 
-Wiki pages are in one of three states. **active** (current, shown in the index, updated), **waiting / on_hold** (parked, can be revived), **closed** (read-only, moved to `wiki/archive/` at the next lint). `status` is updated when a case closes. Content is never deleted, only archived. Auditability over tidiness.
+Wiki pages are in one of three states. **active** (current, shown in the index, updated), **waiting / on_hold** (parked, can be revived), **closed** (read-only, proposed for `wiki/archive/` in `wiki/open-questions.md` and moved once the owner agrees, since archiving is a reductive change). `status` is updated when a case closes. Content is never deleted, only archived. Auditability over tidiness.
 
 ## Several people, one library
 

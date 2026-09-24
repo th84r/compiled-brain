@@ -20,6 +20,8 @@ Useful directions: what each person involved wants and why, the numbers behind a
 - **Internally answerable** (someone has the file, someone remembers). Write them to `wiki/open-questions.md` addressed to whoever can answer.
 - **Genuinely unknown.** Note them as risks on the case page.
 
+If you wrote anything into the wiki, add one entry to `wiki/log.md`, headed `## YYYY-MM-DD gap-scan | title (initials)`, that names the case page and `open-questions.md`.
+
 ## 4. Report
 
 Which gaps you closed, which are queued, and which of them would change the approach if answered one way rather than the other. That last group is the one worth chasing.
