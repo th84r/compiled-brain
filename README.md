@@ -1,3 +1,5 @@
+<img src="docs/pacioli-mark.svg" width="56" height="56" alt="The Pacioli mark, a glass rhombicuboctahedron half full of water">
+
 # Pacioli
 
 Double-entry bookkeeping for what you know. Raw material in, dated and sourced knowledge out, nothing ever erased.
@@ -8,7 +10,7 @@ Built for people who do professional work across several roles at once and need 
 
 ## Why bookkeeping
 
-Merchants in Florence and Genoa were keeping their books this way by around 1300, and Luca Pacioli wrote the method down in 1494. Their problem was how to keep a record that many people depend on, where the facts change over time and someone has to be able to reconstruct what was true on any given date.
+Italian merchants were keeping their books this way by around 1300, and Luca Pacioli wrote the method down in 1494. Their problem was how to keep a record that many people depend on, where the facts change over time and someone has to be able to reconstruct what was true on any given date.
 
 The answer has held for seven centuries. **You never rub anything out. You post a correction.**
 
