@@ -79,11 +79,17 @@ docs/ONBOARDING.md         How /onboard shapes the template to your work
 docs/MEMORY-ZONE.md        The second zone, which lives outside the repo
 ```
 
+## Kept on your own machine
+
+The library is a folder of plain files on your own computer, under git. There is no server or account, and no service holds your knowledge, so it keeps working if a vendor changes its terms or retires a model. A backup is a copy of the folder, and the full history is in git.
+
+The agent is the only part that reaches outside. It reads the pages a task needs and sends them to whichever model it runs on. Choose that model the way you would choose anyone else who reads your files, and for sensitive material, run the library with a model you host yourself. The scripts that check the books run locally and never call a model.
+
 ## Not tied to one tool
 
 The books are plain Markdown with YAML frontmatter. Any editor opens them, any agent can read them, and they will still open in twenty years. The checks are plain Python with no dependencies and no model involved, so `fmquery.py`, `validate.py`, `voice.py` and `selftest.py` give the same answer whichever AI you use, or none.
 
-The operations in `.claude/commands/` are written for Claude Code, but each one is an ordinary Markdown file of instructions. Any agent that can read files and run Python can follow them. `AGENTS.md` points agents that look for that file name to `CLAUDE.md`.
+The operations in `.claude/commands/` are written for Claude Code, but each one is an ordinary Markdown file of instructions. They ask a lot of the agent. It has to read and edit many files, run Python, reconcile new material against what is already known, and follow a procedure over many steps without losing its place. Any agentic model with that level of capability can run the library, from Anthropic, from another provider or on your own hardware. A weaker model can still run the checks and answer from the books, and it will make more mistakes when it posts. `AGENTS.md` points agents that look for that file name to `CLAUDE.md`.
 
 The whole repository opens as an Obsidian vault as it is. Links in page bodies and in `related:` show up as backlinks and in the graph, so Obsidian can be the place you read and browse while the agent does the posting. Frontmatter wikilinks must be quoted for that to work, and the hook enforces it.
 
@@ -157,7 +163,7 @@ Three machine checks, because conventions that depend on discipline stop working
 
 ## Requirements
 
-Python 3.9 or later, standard library only. An agent that reads `CLAUDE.md` and can run shell commands. Built and used daily with [Claude Code](https://claude.com/claude-code), and the structure carries to any agent that reads a project instruction file.
+Python 3.9 or later, standard library only. An agent that reads `CLAUDE.md` and can run shell commands. Built and used daily with [Claude Code](https://claude.com/claude-code). Any agentic model capable enough to follow the procedures can run it, see [Not tied to one tool](#not-tied-to-one-tool).
 
 Git is assumed. Every change is a commit, which is what makes the semi-autonomous loop safe to run.
 
