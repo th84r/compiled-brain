@@ -41,7 +41,7 @@ Anything that leaves the library, in a report, a decision or another person's AI
 
 Raw material is what gets posted. Emails, meeting notes, reports, datasets, drafts. The language model is the clerk that posts it. The wiki is the books. Things reach the wiki only after they have been read, filtered, reconciled against what you already knew, and written down with a date.
 
-The structural pattern comes from Andrej Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) sketch. What this repository adds is the bookkeeping discipline that keeps it honest once it is more than a weekend project: a schema, a validation hook, a generated dashboard, an append-only journal, and the rule that facts get invalidated rather than overwritten.
+The pattern comes from Andrej Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f): raw sources, a wiki the model maintains, a schema file, ingest, query and lint, an index and an append-only log. What this repository adds is the bookkeeping discipline that keeps it honest once it is more than a weekend project. A trial balance that proves the journal and the pages agree. The rule that a changed fact keeps its old value with a date instead of being overwritten. Checks that run without a model, on every write and against facts you trust. Roles, a dashboard generated from the pages, an onboarding interview, and a loop that commits what adds and proposes what removes.
 
 ## Why most second brains rot
 
