@@ -14,7 +14,7 @@ The answer has held for seven centuries. **You never rub anything out. You post 
 
 That single rule is what this repository implements for knowledge, and the correspondence is closer than an analogy.
 
-The project is named after him. Luca Pacioli was a Franciscan friar who taught mathematics. He wrote the first printed description of the method, in his *Summa* of 1494, and Leonardo da Vinci drew the illustrations for a later book of his, *De divina proportione*.
+The project is named after Luca Pacioli, a Franciscan friar who taught mathematics. He wrote the first printed description of the method, in his *Summa* of 1494, and Leonardo da Vinci drew the illustrations for a later book of his, *De divina proportione*.
 
 | Bookkeeping | Here |
 |---|---|
