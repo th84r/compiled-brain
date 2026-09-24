@@ -1,4 +1,4 @@
-# doubleentry
+# Pacioli
 
 Double-entry bookkeeping for what you know. Raw material in, dated and sourced knowledge out, nothing ever erased.
 
@@ -13,6 +13,8 @@ Merchants in Genoa and Florence solved this problem in the fourteenth century, a
 The answer has held for six centuries. **You never rub anything out. You post a correction.**
 
 That single rule is what this repository implements for knowledge, and the correspondence is closer than an analogy.
+
+The project is named after him. Luca Pacioli was a Franciscan friar who taught mathematics, worked with Leonardo da Vinci, who drew the illustrations for one of his books, and wrote the first printed description of the method in his *Summa* of 1494. A library that keeps its facts honest might as well carry the name of the man who wrote down how merchants kept theirs.
 
 | Bookkeeping | Here |
 |---|---|
@@ -90,7 +92,7 @@ What you would lose by switching agent is the automatic hook on every write. Run
 ## Quickstart
 
 ```bash
-git clone https://github.com/th84r/doubleentry.git my-books
+git clone https://github.com/th84r/pacioli.git my-books
 cd my-books
 python3 .claude/scripts/selftest.py              # every check should say ok
 python3 .claude/scripts/fmquery.py --dashboard   # writes wiki/status.md
