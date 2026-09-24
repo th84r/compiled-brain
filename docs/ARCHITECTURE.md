@@ -16,7 +16,7 @@ What works is keeping the library the way a bookkeeper keeps the books. Every en
 
 Raw material is what gets posted. The wiki is the books.
 
-The model is double-entry bookkeeping. Karpathy's sketch treats the model as a compiler, and **a compiler has no memory.** It translates what is in front of it and does not care what it translated last time. Bookkeeping works the other way. New material is held against what is already recorded, and a fact that has changed keeps its old value with a date.
+The model is double-entry bookkeeping. Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) sketch treats the model as a compiler, and **a compiler has no memory.** It translates what is in front of it and does not care what it translated last time. Bookkeeping works the other way. New material is held against what is already recorded, and a fact that has changed keeps its old value with a date.
 
 Bookkeeping solved exactly this problem long before anyone thought of it as a knowledge problem, a record many people depend on where the facts change and someone must be able to reconstruct any past state. Italian merchants used the method by the early fourteenth century and Luca Pacioli wrote it down in 1494. Its central rule has not changed since. You never rub anything out, you post a correction.
 
