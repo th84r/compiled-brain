@@ -12,7 +12,7 @@ The wiki is one of two zones. This document describes the other one, because the
 
 ## What does not
 
-Chronologies, domain knowledge, methodology, data findings, anything with a source. That is wiki material. The test is simple: could a colleague use this fact? If yes, it belongs in the wiki. If it only makes sense as a note about how this particular person works, it belongs in memory.
+Chronologies, domain knowledge, methodology, data findings, anything with a source. That is wiki material. The test is whether a colleague could use this fact. If so, it belongs in the wiki. If it only makes sense as a note about how this particular person works, it belongs in memory.
 
 ## The shape that works
 
@@ -35,7 +35,7 @@ not hold.
 and stop.
 ```
 
-Four types have proved enough. `user` for who the person is. `feedback` for guidance on how to work, both corrections and confirmations, always with the reason. `project` for ongoing work, goals or constraints that the code and history do not show. `reference` for pointers to external resources.
+Four types have proved enough. `user` for who the person is. `feedback` for guidance on how to work, both corrections and confirmations, always with the reason. `project` for ongoing work, goals or constraints that the wiki and git history do not show. `reference` for pointers to external resources.
 
 ## The rule that keeps the zones apart
 

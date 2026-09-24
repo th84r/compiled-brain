@@ -1,8 +1,8 @@
 # Onboarding
 
-The template was generalised from one person's work, and every generalisation leaves a shape behind. The section names, the quality filter, the example, the intent table: all of it carries assumptions about what a working day looks like. Editing those by hand is the step people skip, and a template with the wrong shape gets quietly abandoned around week three.
+The template was generalised from one person's work, and every generalisation leaves a shape behind. The section names, the quality filter, the example and the intent table all carry assumptions about what a working day looks like. Editing those by hand is the step people skip, and a template with the wrong shape gets quietly abandoned around week three.
 
-So the first thing you do is say "set this up for me", and the agent runs `/onboard`.
+Start by saying "set this up for me", and the agent runs `/onboard`.
 
 ## What it does
 
@@ -11,7 +11,7 @@ It interviews you. Nine questions, one pass, short answers are fine. Each questi
 | It asks about | It writes |
 |---|---|
 | What you do and for whom | The opening of `CLAUDE.md` |
-| Your roles, and which ones nobody chases | The hats list, one router page per hat, the weighting in `/weekly-review` |
+| Your roles, and which ones nobody chases | The hats list, one router page per hat, and a note on which ones nobody chases |
 | Your unit of work and what you call it | The `type` vocabulary and the example |
 | What a page about one should show | The section template in `/new-case` |
 | What lands on you in a week | Ingest conventions and naming |

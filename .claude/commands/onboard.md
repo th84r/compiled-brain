@@ -8,7 +8,7 @@ Two rules for the whole run.
 
 **Ask, then act.** Do the interview first, in one pass, and only then edit files. Do not edit after each answer, it produces a library shaped by whatever was said last.
 
-**Write in their language.** If they answer in Norwegian, the hats, the quality filter and the example case are written in Norwegian. The scripts do not care, and the library should read like theirs.
+**Write in their language.** If they answer in French, the hats, the quality filter and the example case are written in French. The scripts do not care, and the library should read like theirs.
 
 If `wiki/reference/profile.md` already exists, this is a re-run. Read it first, ask only what has changed, and keep everything else.
 
@@ -30,7 +30,7 @@ Maps to: the opening paragraph of `CLAUDE.md`, and the tone of everything else.
 
 Then: "Which of these have someone external who chases you, and which move only when you push?"
 
-Maps to: the hats list in `CLAUDE.md`, one router page per hat in `wiki/hats/`, and the weighting rule in `/weekly-review` about work nobody is chasing.
+Maps to: the hats list in `CLAUDE.md`, one router page per hat in `wiki/hats/`, and the note in `CLAUDE.md` on which hats nobody chases, which `/weekly-review` uses to weight overdue work.
 
 ### 3. The unit of work
 

@@ -19,7 +19,7 @@ A good question has one right answer, a source, and would actually be asked. Avo
 
 ## Two kinds of check
 
-**Assertions** are deterministic. A page, a field, an expected value. `fmquery.py --eval` runs them with no model involved, so they belong in CI and they catch a silently changed fact the moment it changes. Use them for the numbers and terms you would be embarrassed to get wrong.
+**Assertions** are deterministic. A page, a field, an expected value. `fmquery.py --eval` runs them with no model involved, so they can run in CI and they catch a silently changed fact the moment it changes. Use them for the numbers and terms you would be embarrassed to get wrong.
 
 **Questions** need a model to answer. `/eval` runs them cold and scores the answers. Use them for the things that require reading and synthesis.
 

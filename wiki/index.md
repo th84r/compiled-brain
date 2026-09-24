@@ -27,7 +27,7 @@ Who is who, their role and how they operate. See `people/`.
 Standing knowledge about your field, reference figures, facts that hold across cases. See `reference/`.
 
 - [reference/eval-set.md](reference/eval-set.md), the golden questions the library should be able to answer
-- [reference/output-artefakter.md](reference/output-artefakter.md), the register of finished deliverables
+- [reference/deliverables.md](reference/deliverables.md), the register of finished deliverables
 
 ## Workflows
 

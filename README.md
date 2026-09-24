@@ -8,13 +8,13 @@ Built for people who do professional work across several roles at once and need 
 
 ## Why bookkeeping
 
-Merchants in Genoa and Florence solved this problem in the fourteenth century, and Luca Pacioli wrote their method down in 1494. How do you keep a record that many people depend on, where the facts change over time, and where someone has to be able to reconstruct what was true on any given date.
+Merchants in Florence and Genoa were keeping their books this way by around 1300, and Luca Pacioli wrote the method down in 1494. Their problem was how to keep a record that many people depend on, where the facts change over time and someone has to be able to reconstruct what was true on any given date.
 
-The answer has held for six centuries. **You never rub anything out. You post a correction.**
+The answer has held for seven centuries. **You never rub anything out. You post a correction.**
 
 That single rule is what this repository implements for knowledge, and the correspondence is closer than an analogy.
 
-The project is named after him. Luca Pacioli was a Franciscan friar who taught mathematics, worked with Leonardo da Vinci, who drew the illustrations for one of his books, and wrote the first printed description of the method in his *Summa* of 1494. A library that keeps its facts honest might as well carry the name of the man who wrote down how merchants kept theirs.
+The project is named after him. Luca Pacioli was a Franciscan friar who taught mathematics. He wrote the first printed description of the method, in his *Summa* of 1494, and Leonardo da Vinci drew the illustrations for a later book of his, *De divina proportione*.
 
 | Bookkeeping | Here |
 |---|---|
@@ -31,13 +31,13 @@ The project is named after him. Luca Pacioli was a Franciscan friar who taught m
 
 In double-entry bookkeeping every transaction is written twice, and the two sides must agree. That agreement is the proof that nothing went missing.
 
-Here every fact is written twice too. Once by date in the journal, `wiki/log.md`, saying when it arrived and why. Once by subject on its page, where it is reconciled against what was already known. `fmquery.py --balance` holds the two against each other. A page that changed with no journal entry, or a journal entry naming a page that is gone, shows up as out of balance.
+Here every fact is written twice too. Once by date in the journal, `wiki/log.md`, saying when it arrived and why. Once by subject on its page, where it is reconciled against what was already known. `fmquery.py --balance` holds the two against each other. A page whose `updated` date falls inside the journal's window and that no journal entry names, or a journal entry naming a page that is gone, shows up as out of balance.
 
-This is the answer to a question every knowledge system eventually meets. Trusting what is stored is the easy part. Trusting what flows out of it, into a report, a decision or another person's AI, requires that every fact can show where it came from and when. The journal is that trail, and the balance is how you know the trail is complete.
+Anything that leaves the library, in a report, a decision or another person's AI, has to show where each fact came from and when. The journal is that trail, and the balance is how you know the trail is complete.
 
 ## How material gets in
 
-Raw material is what gets posted. Emails, meeting notes, reports, datasets, drafts. The language model is the clerk that posts it. The wiki is the books. The wiki is never where you dump things. It is where things end up after they have been read, filtered, reconciled against what you already knew, and written down with a date on them.
+Raw material is what gets posted. Emails, meeting notes, reports, datasets, drafts. The language model is the clerk that posts it. The wiki is the books. Things reach the wiki only after they have been read, filtered, reconciled against what you already knew, and written down with a date.
 
 The structural pattern comes from Andrej Karpathy's LLM-wiki sketch. What this repository adds is the bookkeeping discipline that keeps it honest once it is more than a weekend project: a schema, a validation hook, a generated dashboard, an append-only journal, and the rule that facts get invalidated rather than overwritten.
 
@@ -64,7 +64,7 @@ wiki/                      The books
   status.md                GENERATED. Never edit by hand.
   hats/                    One index per role you wear
   cases/ projects/ people/ orgs/ meetings/ reference/ workflows/ themes/ archive/
-inbox/                     Raw material: pending -> processed -> archive
+inbox/                     Raw material: pending -> processed once posted, or archive if it fails the quality filter
 output/                    Generated artefacts (reports, analyses, decks)
 data/                      Structured datasets the analyses are built on
 .claude/
@@ -123,13 +123,13 @@ Each is a slash command in `.claude/commands/`. You rarely type them. You descri
 | `/eval` | Measure the library against a golden set of questions, track the pass rate |
 | `/distill-skill` | Turn a procedure that worked into a reusable command |
 
-Plus `/onboard` to shape the library to your work, `/new-case`, `/weekly-review`, and a semi-autonomous `/loop` that runs the ladder on its own.
+Plus `/onboard` to shape the library to your work, `/new-case`, `/weekly-review`, and a semi-autonomous `/loop` that runs the ladder on its own. `/loop` is Claude Code's built-in command and reads `.claude/loop.md`. With another agent, give it that file as the prompt.
 
-## The rules that actually matter
+## The rules that matter
 
-Five constraints carry most of the value. The folder layout carries very little of it.
+Five constraints carry most of the value.
 
-**Additive runs, reductive proposes.** The loop may add review dates, cross-links, TL;DR lines and tentative synthesis on its own. Merging pages, archiving, deleting and overwriting facts are written to `wiki/open-questions.md` for a human. Content is archived, never deleted.
+**Additive runs, reductive proposes.** The loop may add review dates, cross-links, TL;DR lines and tentative synthesis on its own. Merging pages, archiving, deleting and overwriting facts are written to `wiki/open-questions.md` for a human. Content is moved to the archive and kept.
 
 **A generated dashboard beats a written one.** `fmquery.py --dashboard` regenerates `wiki/status.md` in seconds. Start every session with it.
 
@@ -137,7 +137,7 @@ Five constraints carry most of the value. The folder layout carries very little 
 
 **Inference expires.** Anything derived is `tentative` with a `review` date.
 
-**Edit budget.** The loop changes at most five pages per iteration, then stops and reports. This is what prevents a runaway rewrite of your library at three in the morning.
+**Edit budget.** The loop changes at most five pages per iteration, then stops and reports. This is what prevents a runaway rewrite of your library.
 
 ## Two zones
 
@@ -149,11 +149,11 @@ Keep them apart and cross-reference. Duplicating between them is how they drift.
 
 Three machine checks, because conventions that depend on discipline stop working in month three.
 
-`hooks/validate.py` runs after every write to `wiki/` and reports a page that has no `title`, no `type`, or a `status` outside the schema. It runs on the main pages, meaning any `overview.md` and anything under `reference/`, `themes/` or `workflows/`, so working sub-documents stay free-form. It fires after the write rather than before, so it reports rather than blocks, which is what lets the agent fix the page in the same turn.
+`hooks/validate.py` runs after every write to `wiki/` and reports a page that has no `title`, no `type`, or a `status` outside the schema. It runs on the main pages, meaning any `overview.md` and anything under `reference/`, `themes/` or `workflows/`, so working sub-documents stay free-form. It fires after the write and reports the problem, so the agent can fix the page in the same turn.
 
 `scripts/fmquery.py` drives the linter and the weekly review deterministically, so "what is overdue" is a query rather than a judgement call. It also searches the whole library including the log (`--search`, BM25, built in memory per call), runs deterministic fact assertions with no model involved (`--eval`), shows what links to what (`--links`), and keeps the log readable by archiving old months (`--rotate-log`).
 
-`scripts/voice.py` scans anything before it leaves the building, against the rules you set in `wiki/workflows/voice.md`. The shipped default catches em dashes, sentences opening with a conjunction, and ten of the eleven sentence patterns listed in `wiki/workflows/voice.md`. The eleventh, the earned closing aphorism, has no detector because telling a good last line from a generated one needs a reader. A stricter mode adds mid-sentence colons for those who ban them.
+`scripts/voice.py` scans anything before it leaves the building, against the rules you set in `wiki/workflows/voice.md`. The shipped default catches em dashes, sentences opening with a conjunction, and ten of the eleven sentence patterns listed in `wiki/workflows/voice.md`. The third, the closing aphorism, has no detector because telling a good last line from a generated one needs a reader. A stricter mode adds mid-sentence colons for those who ban them.
 
 ## Requirements
 
@@ -163,12 +163,10 @@ Git is assumed. Every change is a commit, which is what makes the semi-autonomou
 
 ## Status
 
-This is the generalised skeleton of a system in daily production use across several roles. The content is stripped, the architecture is not.
+This is the generalised skeleton of a system in daily production use across several roles. The content has been removed and the architecture kept.
 
 Issues and pull requests welcome, particularly on the schema and on the voice rules, which are the two parts most likely to need reshaping for a different kind of work.
 
 ## Licence
 
 MIT. See [LICENSE](LICENSE).
-
-<!-- guard verified 2026-09-22 -->

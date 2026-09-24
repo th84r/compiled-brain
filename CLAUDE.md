@@ -8,7 +8,7 @@ Everything in `<angle brackets>` is a placeholder. The fastest way to replace al
 
 ## What this library is
 
-A self-developing knowledge base covering <your name>'s work across <domain>. It grows sharper over time as raw material is fed in and posted as dated, sourced knowledge.
+A knowledge base covering <your name>'s work across <domain>, kept current as raw material is posted into it.
 
 **Hats.** You wear several. Each one is a context with its own people, its own deadlines, its own tempo. The library serves all of them from one place, and the `hat` field in frontmatter is what keeps them separable without splitting the library into silos.
 
@@ -84,12 +84,12 @@ Full steps live in `.claude/commands/`. They run when intent matches, see the ta
 - **`/lint`**, health check. Contradictions, stale facts (`expires` / `review`), orphan pages, dead sources. Recommends, changes nothing.
 - **`/consolidate`**, the linter's acting sibling. Cleans additively (TL;DR, review dates, cross-links, bi-temporal dating, tentative synthesis), proposes the reductive in `wiki/open-questions.md`.
 - **`/gap-scan`**, find knowledge gaps in active cases, write them to the work queue, close the web-answerable ones directly.
-- **`/eval`**, measure the library against the golden set in `wiki/reference/eval-set.md`. The deterministic half, `fmquery.py --eval`, asserts field values with no model and belongs in CI. The other half needs a model and is scored cold.
+- **`/eval`**, measure the library against the golden set in `wiki/reference/eval-set.md`. The deterministic half, `fmquery.py --eval`, asserts field values with no model and can run in CI. The other half needs a model and is scored cold.
 - **`/distill-skill`**, distil a procedure that worked into `wiki/workflows/skills-index.md` or a reusable command.
 
-The self-reinforcing loop (`/loop`, driver in `.claude/loop.md`) runs the operations semi-autonomously down a priority ladder. Additive work is executed, reductive work is proposed, everything is committed to local git. Architecture in `wiki/workflows/self-improvement.md`.
+The self-reinforcing loop (`/loop`, driver in `.claude/loop.md`) runs the operations semi-autonomously down a priority ladder. Additive work is executed, reductive work is proposed, everything is committed to local git. Architecture in `wiki/workflows/self-improvement.md`. `/loop` is Claude Code's built-in command and reads `.claude/loop.md`. With another agent, give it that file as the prompt.
 
-**Before building anything:** check `wiki/workflows/skills-index.md` (procedures that worked) and `wiki/reference/output-artefakter.md` (finished analyses and documents). Reuse and extend rather than reinvent.
+**Before building anything:** check `wiki/workflows/skills-index.md` (procedures that worked) and `wiki/reference/deliverables.md` (finished analyses and documents). Reuse and extend rather than reinvent.
 
 ### Quality filter, what belongs in the wiki
 
@@ -231,6 +231,6 @@ If a request surfaces something that belongs in the wiki, post it too, without a
 
 ---
 
-## What this file is not
+## What this file is
 
-This is not a code CLAUDE.md and this is not a software project. It is a living knowledge library for a working professional. When in doubt, ask first and post afterwards.
+This file sets the rules for a knowledge library kept by a working professional. When in doubt, ask first and post afterwards.

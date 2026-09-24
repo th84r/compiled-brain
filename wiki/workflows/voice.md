@@ -45,11 +45,11 @@ Useful things to capture: how you open (a reaction, a question, mid-thought), yo
 
 ## Calibrating the checker
 
-Two things the script gets wrong often enough to say out loud.
+Four things to know when the checker disagrees with you.
 
 **A factual enumeration is not a rule of three.** "Cases, projects and people" names three folders. The rule targets three parallel items chosen for rhythm, where the third restates the second. Judge these by hand.
 
-**This page flags itself.** It quotes the banned phrases as examples, so the checker matches them. Any page that documents the rules will do the same.
+**This page quotes the banned phrases, so `voice.py` skips it.** Any other page that documents the rules will be flagged.
 
 **A bold lead-in is not a punchline.** A short sentence opening a paragraph is a sub-heading. The script skips paragraph-initial sentences, and it still misses some in .docx. Judge those by hand too.
 

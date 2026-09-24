@@ -16,9 +16,9 @@ What works is keeping the library the way a bookkeeper keeps the books. Every en
 
 Raw material is what gets posted. The wiki is the books.
 
-The metaphor is double-entry bookkeeping rather than a compiler, and the difference matters. **A compiler has no memory.** It translates what is in front of it and does not care what it translated last time. The most distinctive discipline here is the opposite. New material is held against what is already recorded, and a fact that has changed keeps its old value with a date.
+The model is double-entry bookkeeping. Karpathy's sketch treats the model as a compiler, and **a compiler has no memory.** It translates what is in front of it and does not care what it translated last time. Bookkeeping works the other way. New material is held against what is already recorded, and a fact that has changed keeps its old value with a date.
 
-Bookkeeping solved exactly this problem long before anyone thought of it as a knowledge problem, a record many people depend on where the facts change and someone must be able to reconstruct any past state. Italian merchants used the method in the fourteenth century and Luca Pacioli wrote it down in 1494. The answer has held since. You never rub anything out, you post a correction.
+Bookkeeping solved exactly this problem long before anyone thought of it as a knowledge problem, a record many people depend on where the facts change and someone must be able to reconstruct any past state. Italian merchants used the method by the early fourteenth century and Luca Pacioli wrote it down in 1494. Its central rule has not changed since. You never rub anything out, you post a correction.
 
 This has a consequence people usually miss. **You do not edit an account to record something new. You post an entry.** The new thing goes in `inbox/`, and the posting step reads it, decides which accounts it touches, reconciles it against what is already recorded, and writes it in with a date and a reference. The discipline lives in the posting rather than in the person.
 
@@ -40,7 +40,7 @@ New information is appended below old information and both sit there with equal 
 
 **Counter.** Step 5 of `/ingest` forces an explicit decision for every fact that touches something existing: add, update, or supersede. A superseded fact keeps its date and stays on the page.
 
-That last part matters more than it looks. Keeping the old value is what lets you answer "what was it before the change", which is often the question that decides what happens next.
+Keeping the old value is what lets you answer "what was it before the change", which is often the question that decides what happens next.
 
 ### Inference hardens into fact
 
@@ -70,7 +70,7 @@ The rule for deciding is simple. "How does this person work", "who is this perso
 
 A `hat` field rather than one repository per role.
 
-Separate libraries look tidier and are worse. The value in a cross-role library is exactly the connections that cross roles: the person who appears in two pieces of work, the reference data that informs three cases, the method developed in one context that applies in another. Split the library and those connections stop existing.
+Separate libraries lose the connections that cross roles. The value in a cross-role library is exactly the connections that cross roles: the person who appears in two pieces of work, the reference data that informs three cases, the method developed in one context that applies in another. Split the library and those connections stop existing.
 
 The `hat` field gives you the separation where you need it, which is filtering and routing, without giving up the cross-links.
 
@@ -84,13 +84,13 @@ The edit budget of five pages per iteration exists for the same reason. A loop t
 
 ## Why machine enforcement
 
-Conventions that depend on discipline stop working in month three. This is the single most reliable observation about knowledge systems.
+Conventions that depend on discipline stop working in month three.
 
 Three checks, each at the point where the convention is most likely to break.
 
 `hooks/validate.py` runs on write, which is when a schema violation is cheapest to fix. It fails open, because a broken hook that blocks a session is worse than the violation it was catching.
 
-`scripts/fmquery.py` makes staleness a query. Nobody has to remember to check. The same script runs the deterministic half of the eval, `--eval`, which asserts specific field values on specific pages with no model involved. That catches a silently changed fact, or a schema that drifted, the moment it happens, and it runs in CI.
+`scripts/fmquery.py` makes staleness a query. Nobody has to remember to check. The same script runs the deterministic half of the eval, `--eval`, which asserts specific field values on specific pages with no model involved. That catches a silently changed fact, or a schema that drifted, the moment it happens, and it can run in CI as it is.
 
 The log is append-only and grows without bound, which makes it a poor retrieval target after a few thousand lines. `--rotate-log` moves entries older than two months into `wiki/log/YYYY-MM.md`, whole and in order, nothing deleted. The main log stays a rolling window an agent can actually read, and search covers the archives too.
 
@@ -102,7 +102,7 @@ The log is append-only and grows without bound, which makes it a poor retrieval 
 
 **No persisted search index.** Search exists, `fmquery.py --search`, ranked with BM25 over pages and every log entry. It is built in memory on each call and thrown away. That is the same idea as the generated dashboard: a derived view cannot drift from the source if it never outlives the call. Embeddings would be the next step at a scale where lexical search stops finding things, and the rule would be the same, regenerate rather than maintain.
 
-**No automated deletion.** Ever. Content is archived, never removed. Auditability over tidiness.
+**No automated deletion.** Ever. Content is moved to the archive and kept. Auditability over tidiness.
 
 **No sync service.** Git is the sync. If you need it on two machines, push it somewhere private.
 
@@ -118,4 +118,4 @@ Three things almost always need changing, and one thing almost never should.
 
 **Change the voice rules.** `wiki/workflows/voice.md` and the patterns in `voice.py` are calibrated for one person's writing. Yours will differ.
 
-**Do not change the confidence discipline.** `tentative` plus a `review` date on anything derived is what keeps the library honest. It is the easiest invariant to drop and the most expensive to lose.
+**Do not change the confidence discipline.** `tentative` plus a `review` date on anything derived is what keeps the library honest.

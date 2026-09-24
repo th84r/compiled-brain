@@ -329,7 +329,22 @@ def find_unbalanced(pages):
     current = open(os.path.join(WIKI, "log.md"), encoding="utf-8", errors="ignore").read() \
         if os.path.isfile(os.path.join(WIKI, "log.md")) else ""
     dates = LOG_ENTRY.findall(current)
-    opened = parse_date(min(dates)) if dates else None
+    if not dates:
+        # After a full rotation log.md holds only its header. The journal
+        # still opened when the earliest archived entry was written, and
+        # without that date every page would fall outside the opening balance.
+        ld = os.path.join(WIKI, "log")
+        if os.path.isdir(ld):
+            for f in os.listdir(ld):
+                if f.endswith(".md"):
+                    dates += LOG_ENTRY.findall(open(os.path.join(ld, f), encoding="utf-8",
+                                                    errors="ignore").read())
+    if dates:
+        opened = parse_date(min(dates))
+    elif os.path.isfile(os.path.join(WIKI, "log.md")):
+        opened = keep_window_start()
+    else:
+        opened = None
 
     def posted(rel):
         if rel in journal or rel[:-3] in journal:
@@ -461,6 +476,24 @@ def run_eval():
 
 
 # ------------------------------------------------------------- log rotation
+def keep_months():
+    """The months rotate_log leaves in log.md, as YYYY-MM strings."""
+    y, mth = TODAY.year, TODAY.month
+    keep = set()
+    for _ in range(KEEP_MONTHS):
+        keep.add(f"{y:04d}-{mth:02d}")
+        mth -= 1
+        if mth == 0:
+            mth, y = 12, y - 1
+    return keep
+
+
+def keep_window_start():
+    """First day of the oldest month rotate_log keeps in log.md."""
+    y, m = map(int, min(keep_months()).split("-"))
+    return datetime.date(y, m, 1)
+
+
 def rotate_log(dry_run=False):
     """Move log entries older than KEEP_MONTHS into wiki/log/YYYY-MM.md.
 
@@ -475,19 +508,14 @@ def rotate_log(dry_run=False):
     txt = open(lp, encoding="utf-8").read()
     starts = [m.start() for m in LOG_ENTRY.finditer(txt)]
     if not starts:
-        print("log.md has no dated entries")
+        print("# rotate-log  nothing to rotate, log.md has no dated entries"
+              + ("  [dry run]" if dry_run else ""))
         return
     header = txt[:starts[0]]
     bounds = starts + [len(txt)]
     entries = [txt[a:b] for a, b in zip(bounds, bounds[1:])]
 
-    y, mth = TODAY.year, TODAY.month
-    keep = set()
-    for i in range(KEEP_MONTHS):
-        keep.add(f"{y:04d}-{mth:02d}")
-        mth -= 1
-        if mth == 0:
-            mth, y = 12, y - 1
+    keep = keep_months()
 
     stay, move = [], collections.defaultdict(list)
     for e in entries:

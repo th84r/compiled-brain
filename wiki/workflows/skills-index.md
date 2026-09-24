@@ -34,4 +34,4 @@ Trap. If a page shows up under "status values outside the schema", the page is u
 
 Reads `.md`, `.txt` and `.docx`. Quoted passages are excluded, because a verbatim quote is the source's language.
 
-Trap. Bold lead-ins at the start of a paragraph get flagged as setup-and-punchline. That is a false positive in a structured note. Judge those manually rather than rewriting around the checker.
+Trap. Bold lead-ins inside a .docx can still be flagged as setup-and-punchline, because a .docx paragraph break reaches the checker as a single line break. That is a false positive in a structured note. Judge those manually rather than rewriting around the checker.

@@ -26,7 +26,7 @@ Which cases, projects, people or reference topics does this touch? Check `wiki/c
 
 ## 5. Reconcile against what you already know
 
-This is the step that separates a library from a pile. Before writing, compare the new material against what is already there. For every fact that touches something existing (a number, a date, a status, a role), decide:
+Before writing, compare the new material against what is already there. For every fact that touches something existing (a number, a date, a status, a role), decide:
 
 - **ADD**, a new non-conflicting fact. Write it in.
 - **UPDATE**, the same fact with a newer or more precise value. Update it and set `updated`.

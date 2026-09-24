@@ -89,7 +89,41 @@ check("eval assertions all pass", rc == 0 or missing_only,
       out[:300] + "  (assertions fail for reasons other than a deleted page)")
 
 rc, out = run([FMQ, "--rotate-log", "--dry-run"])
-check("rotate-log dry run", rc == 0 and "rotate-log" in out, out[:200])
+check("rotate-log dry run", rc == 0 and "# rotate-log" in out, out[:200])
+
+# A real rotation on a copy. Every entry is dated five years back first, so
+# log.md is left with its header only, which once broke both the dry run and
+# the opening balance. The balance must read the same before and after.
+rtmp = tempfile.mkdtemp()
+try:
+    shutil.copytree(os.path.join(ROOT, "wiki"), os.path.join(rtmp, "wiki"))
+    os.makedirs(os.path.join(rtmp, ".claude", "scripts"))
+    shutil.copy(FMQ, os.path.join(rtmp, ".claude", "scripts", "fmquery.py"))
+    rfmq = os.path.join(rtmp, ".claude", "scripts", "fmquery.py")
+    rlog = os.path.join(rtmp, "wiki", "log.md")
+    import re as _re
+    txt = open(rlog, encoding="utf-8").read()
+    txt = _re.sub(r"^## (\d{4})", lambda m: f"## {int(m.group(1)) - 5}", txt, flags=_re.M)
+    open(rlog, "w", encoding="utf-8").write(txt)
+
+    def rrun(args):
+        r = subprocess.run([PY, rfmq] + args, capture_output=True, text=True, cwd=rtmp)
+        return r.returncode, r.stdout + r.stderr
+
+    def summary(out):
+        return out.splitlines()[0] if out else ""
+
+    rc_b, out_b = rrun(["--balance"])
+    rc, out = rrun(["--rotate-log"])
+    emptied = not _re.search(r"^## \d{4}-\d{2}-\d{2}", open(rlog, encoding="utf-8").read(), _re.M)
+    check("rotate-log empties log.md on a copy", rc == 0 and emptied, out[:200])
+    rc, out = rrun(["--rotate-log", "--dry-run"])
+    check("rotate-log dry run after full rotation", rc == 0 and "# rotate-log" in out, out[:200])
+    rc_a, out_a = rrun(["--balance"])
+    check("balance unchanged by rotation", rc_a == rc_b and summary(out_a) == summary(out_b),
+          f"before: {summary(out_b)}  after: {summary(out_a)}")
+finally:
+    shutil.rmtree(rtmp, ignore_errors=True)
 
 tmp = tempfile.mkdtemp()
 bad = os.path.join(tmp, "wiki", "cases", "x", "overview.md")
@@ -128,6 +162,12 @@ open(v, "w").write("It is not about speed, it is about trust. Moreover, we delve
 rc, out = run([VOICE, v])
 check("voice catches antithesis", "antithesis" in out, out[:200])
 check("voice catches connector and filler", "connector" in out and "filler" in out, out[:200])
+open(v, "w").write("The content is stripped, the architecture is not.\n")
+rc, out = run([VOICE, v])
+check("voice catches a trailing 'the Y is not'", "antithesis" in out, out[:200])
+open(v, "w").write("The wiki is never a dumping ground. It is where things end up.\n")
+rc, out = run([VOICE, v])
+check("voice catches 'is never X. It is Y'", "antithesis" in out, out[:200])
 open(v, "w").write("The meeting is on Tuesday. Bring the slides and the two handouts.\n")
 rc, out = run([VOICE, v])
 check("voice passes clean prose", "CLEAN" in out, out[:200])

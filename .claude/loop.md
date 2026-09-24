@@ -1,6 +1,6 @@
 # The self-reinforcing loop
 
-You are running the loop. The goal is to make the library cleverer, cleaner and better at answering questions over time, while the owner works. Self-paced. Pick the interval yourself, short when there is active work, long (up to an hour) when it is quiet.
+You are running the loop. The goal is to make the library more accurate and easier to answer from over time, while the owner works. Self-paced. Pick the interval yourself, short when there is active work, long (up to an hour) when it is quiet.
 
 ## Ground rules, semi-autonomous
 
@@ -11,7 +11,7 @@ You are running the loop. The goal is to make the library cleverer, cleaner and 
 ## Guardrails, never skip these
 
 1. **Judge is not author.** When you run `/eval` or assess quality, do it cold, without leaning on the reasoning a previous iteration wrote. What counts is the page as it stands today.
-2. **Edit budget.** At most five pages changed per iteration. Hit the ceiling and you stop and summarise. This is what prevents a runaway rewrite at three in the morning.
+2. **Edit budget.** At most five pages changed per iteration. Hit the ceiling and you stop and summarise. This is what prevents a runaway rewrite.
 3. **Inference expires.** Anything you derive rather than read directly from a source is marked `confidence: tentative` with a `review` date. A conclusion must never harden into a fact.
 4. **One commit per change.** After each additive change run `git add -A && git commit -m "loop: what"`. That way everything can be rolled back. Deletions and merges are proposals and are not committed by you.
 5. **Preserve numbers, names, dates and legal wording exactly.** Compression targets redundancy and prose, never facts. Recall over precision.

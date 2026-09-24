@@ -139,7 +139,11 @@ PATTERNS = [
     ("1 antithesis",
      rf"(?:\bit(?:'s| is)(?: not| n't)\s+{W}[^,.]{{1,50}}, it(?:'s| is)\b"
      rf"|\bnot (?:just |merely |simply |only )?{W}[^,.]{{1,50}}, but\b"
-     rf"|, not {W}[^,.]{{1,40}}[.,])"),
+     rf"|, not {W}[^,.]{{1,40}}[.,]"
+     # "The content is stripped, the architecture is not."
+     rf"|\b{W}+ (?:is|are|was|were) {W}+, the {W}+ (?:is|are|was|were) not\b"
+     # "It is never X. It is Y." The contrast straddles a full stop.
+     rf"|\b(?:is|are) never {W}[^.!?]{{0,60}}\. (?:It|This|That|They)(?:'s| is| are)\b)"),
 
     # 5. The didactic imperative as an opening.
     ("5 didactic opening",

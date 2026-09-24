@@ -14,7 +14,7 @@ TL;DR. The loop runs the operations down a priority ladder while you work. Addit
 
 ## What it is for
 
-A library decays unless something maintains it. Doing that by hand means doing it never. The loop is the maintenance crew.
+A library decays unless something maintains it. The loop does the maintenance nobody does by hand.
 
 ## The ladder
 

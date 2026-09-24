@@ -46,7 +46,7 @@ TL;DR. Every main page carries YAML frontmatter. Dates are ISO, always. Enforced
 
 **`review` belongs on volatile facts only.** A number, a date, a status, a role. Putting a review date on a historical chronology just creates noise that trains you to ignore the linter.
 
-**`confidence: tentative` is not an admission of weakness.** It is what lets a derived conclusion be useful without becoming a false fact. Use it freely.
+**`confidence: tentative` lets a derived conclusion be used without becoming a false fact.** Use it freely.
 
 ## Which pages need full frontmatter
 
@@ -56,4 +56,4 @@ Sub-documents (chronology, preparation, working analysis) do not need it. They a
 
 ## TL;DR line
 
-Every page opens with one line summarising the core, so relevance can be triaged before the page is read. This is the single highest-value convention in the schema and the one most often skipped.
+Every page opens with one line summarising the core, so relevance can be triaged before the page is read. This is the convention most often skipped.

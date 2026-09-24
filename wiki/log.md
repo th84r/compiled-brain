@@ -10,10 +10,10 @@ Write in full sentences. A log line that only makes sense to the person who wrot
 
 ---
 
+## 2026-01-10 setup | Library initialised from the Pacioli template
+
+Hats, quality filter and voice rules still carry the template placeholders. Opening postings for `hats/example-hat.md`, `reference/eval-set.md` and `reference/deliverables.md`.
+
 ## 2026-01-10 new-case | Example talk page opened
 
 Opened `cases/example-talk/` from the committee's invitation. Abstract due 15 February, slides 1 October, co-presenter offered the second half. Delete this entry together with the example page once you have your own.
-
-## 2026-01-10 setup | Library initialised from the Pacioli template
-
-Hats, quality filter and voice rules still carry the template placeholders. Opening postings for `hats/example-hat.md`, `reference/eval-set.md` and `reference/output-artefakter.md`.
