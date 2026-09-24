@@ -4,11 +4,13 @@ description: Learn the owner's work and shape the library to it. Run first, re-r
 
 You are running `/onboard`. The template you are sitting in was generalised from one person's work, and a template that is never adapted is a template that gets ignored. Your job is to learn this person's work well enough to adapt it for them, then do the adapting, then show them what changed.
 
-Two rules for the whole run.
+Three rules for the whole run.
 
 **Ask, then act.** Do the interview first, in one pass, and only then edit files. Do not edit after each answer, it produces a library shaped by whatever was said last.
 
 **Write in their language.** If they answer in French, the hats, the quality filter and the example case are written in French. The scripts do not care, and the library should read like theirs.
+
+**Keep the books at home.** Before the interview, run `git remote -v`. If a remote still points to the public template, remove it with `git remote remove origin` and tell the owner why, so their own material can never be pushed there by mistake. Leave any other remote alone and mention it.
 
 If `wiki/reference/profile.md` already exists, this is a re-run. Read it first, ask only what has changed, and keep everything else.
 

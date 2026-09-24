@@ -81,7 +81,9 @@ docs/MEMORY-ZONE.md        The second zone, which lives outside the repo
 
 ## Kept on your own machine
 
-The library is a folder of plain files on your own computer, under git. There is no server or account, and no service holds your knowledge, so it keeps working if a vendor changes its terms or retires a model. A backup is a copy of the folder, and the full history is in git.
+The library is a folder of plain files on your own computer. Git keeps its full history in the same folder and sends nothing anywhere by itself. There is no server or account, and no service holds your knowledge, so it keeps working if a vendor changes its terms or retires a model.
+
+Your books never go to GitHub. The setup below cuts the link back to this template, so a stray `git push` has nowhere to go. For an off-site copy, back up the folder, or push to a private remote you control and trust with everything in it.
 
 The agent is the only part that reaches outside. It reads the pages a task needs and sends them to whichever model it runs on. Choose that model the way you would choose anyone else who reads your files, and for sensitive material, run the library with a model you host yourself. The scripts that check the books run locally and never call a model.
 
@@ -100,6 +102,7 @@ What you would lose by switching agent is the automatic hook on every write. Run
 ```bash
 git clone https://github.com/th84r/pacioli.git my-books
 cd my-books
+git remote remove origin                         # your books stay on this machine
 python3 .claude/scripts/selftest.py              # every check should say ok
 python3 .claude/scripts/fmquery.py --dashboard   # writes wiki/status.md
 python3 .claude/scripts/fmquery.py --search "abstract"
