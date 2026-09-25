@@ -1,0 +1,17 @@
+# Runs the library's own checks on every push, the way a fresh clone would.
+name: selftest
+on: [push, pull_request]
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the ledger reads the history since it opened
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 .claude/scripts/selftest.py
+      - run: python3 .claude/scripts/fmquery.py --balance
+      - run: python3 .claude/scripts/fmquery.py --eval
+      - run: python3 .claude/scripts/fmquery.py --agree
