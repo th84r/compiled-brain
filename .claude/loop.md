@@ -13,7 +13,7 @@ You are running the loop. The goal is to make the library more accurate and easi
 1. **Judge is not author.** When you run `/eval` or assess quality, do it cold, without leaning on the reasoning a previous iteration wrote. What counts is the page as it stands today.
 2. **Edit budget.** At most five pages changed per iteration. Hit the ceiling and you stop and summarise. This is what prevents a runaway rewrite.
 3. **Inference expires.** Anything you derive rather than read directly from a source is marked `confidence: tentative` with a `review` date. A conclusion must never harden into a fact.
-4. **One commit per change.** After each additive change run `git add -A && git commit -m "loop: what"`. That way everything can be rolled back. Deletions and merges are proposals and are not committed by you.
+4. **One commit per change, with its own journal entry.** Before committing, add an entry to `wiki/log.md` naming every page you changed, so the entry and the pages land in the same commit. Then run `git add -A && git commit -m "loop | what"`. The balance holds each commit to this, and a commit without its posting stays out of balance until a late entry names it. That way everything can be rolled back. Deletions and merges are proposals and are not committed by you.
 5. **Preserve numbers, names, dates and legal wording exactly.** Compression targets redundancy and prose, never facts. Recall over precision.
 
 ## Priority ladder, take the highest rung that has work

@@ -19,7 +19,7 @@ At most five pages changed per run. Hit the ceiling and you stop and report. Thi
 ## Steps
 
 1. Run `/lint` first and work from its findings.
-2. Do the additive fixes, one commit per change.
+2. Do the additive fixes, one commit per change, each with a short journal entry naming the page, `## YYYY-MM-DD consolidate | page, what`, in the same commit.
 3. Write the reductive proposals to `wiki/open-questions.md` with enough context that a human can decide without re-reading everything.
 4. Report what you changed and what is waiting.
 
