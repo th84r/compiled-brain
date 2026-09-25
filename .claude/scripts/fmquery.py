@@ -127,7 +127,12 @@ def as_list(v):
 
 
 def hats(fm):
-    return [h.lower() for h in as_list(fm.get(HAT_FIELD))] or ["?"]
+    """The hats a page belongs to. A list, or a scalar that may hold several
+    separated by commas, "mpo, mnn"."""
+    out = []
+    for v in as_list(fm.get(HAT_FIELD)):
+        out += [h.strip().lower() for h in v.split(",") if h.strip()]
+    return out or ["?"]
 
 
 def parse_date(v):
@@ -688,7 +693,8 @@ def own_hats():
 def hats_report(pages):
     """Every hat the library uses, with a display name and page counts.
 
-    The display name is the title of the hat's router page in wiki/hats/,
+    The display name is the `name` of the hat's router page in wiki/hats/,
+    or its title,
     so "field-work" can be shown as "Field work". A hat without a
     router page falls back to its key.
     """
@@ -708,14 +714,20 @@ def hats_report(pages):
             count[h] += 1
             if str(fm.get("type", "")).lower() in WORK_TYPES and is_active(fm):
                 active[h] += 1
-    out = []
-    for key in sorted(set(count) | set(routers)):
-        r = routers.get(key)
-        out.append({"key": key, "title": (r or {}).get("title") or key,
-                    "router": f"hats/{key}.md" if r else None,
+    # Once a library declares its hats with router pages, only those count,
+    # plus bridging. Other values in the hat field are older uses of it and
+    # are listed apart, so an app can show hats without them.
+    keys = set(routers) | ({"bridging"} & set(count)) if routers else set(count)
+    out, other = [], []
+    for key in sorted(keys):
+        r = routers.get(key) or {}
+        out.append({"key": key, "title": r.get("name") or r.get("title") or key,
+                    "router": f"hats/{key}.md" if key in routers else None,
                     "own": key in own, "bridging": key == "bridging",
                     "pages": count[key], "active_work": active[key]})
-    return out
+    for key in sorted(set(count) - keys):
+        other.append({"key": key, "pages": count[key]})
+    return out, other
 
 
 def git(*args):
@@ -869,9 +881,9 @@ def main():
         return sys.exit(1 if unposted or dangling else 0)
 
     if a.hats:
-        rep = hats_report(pages)
+        rep, other = hats_report(pages)
         if a.json:
-            return emit({"hats": rep})
+            return emit({"hats": rep, "other_values": other})
         print(f"# {len(rep)} hats")
         for h in rep:
             flag = " own" if h["own"] else ""

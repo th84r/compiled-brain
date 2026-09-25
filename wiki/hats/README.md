@@ -10,7 +10,8 @@ It does not duplicate the case pages. It links to them.
 
 ```markdown
 ---
-title: <Hat name>
+title: <Hat name>, router
+name: <Hat name>
 type: reference
 status: active
 confidence: verified

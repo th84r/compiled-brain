@@ -1,5 +1,6 @@
 ---
 title: Example hat
+name: Example hat
 type: reference
 status: active
 confidence: verified
