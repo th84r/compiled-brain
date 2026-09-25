@@ -1,0 +1,4 @@
+# The strict ledger opened here. From the next commit on, every commit
+# that changes a page must add a journal entry naming it, or a later
+# entry must name the commit. Written by fmquery.py --open-ledger.
+61658d5d6ba0a71eadfbb6aed922ef0d9cc607d7 2026-09-25
