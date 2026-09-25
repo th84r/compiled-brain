@@ -102,7 +102,7 @@ Now edit, in this order. Each step names the file and what changes.
 
 7. **`wiki/reference/eval-set.md`.** Replace the example assertions with real ones from answer 9. Each needs a page that exists, so create or point to the right page. Replace the example question too.
 
-8. **`wiki/index.md`** and **`wiki/log.md`.** Update the index for the new hats. Append one entry, dated today, `## YYYY-MM-DD shape | Library shaped to <name>'s work (initials)`, listing what was configured and naming by path every page you created. `fmquery.py --balance` checks it in step 9. If several people will share the library, ask who they are and write the cadence table in `CLAUDE.md` with their names.
+8. **`wiki/index.md`** and **`wiki/log.md`.** Update the index for the new hats. Append one entry, dated today, `## YYYY-MM-DD shape | Library shaped to <name>'s work (initials)`, listing what was configured and naming by path every page you created, changed or removed, in the same commit as those pages. `fmquery.py --balance` checks it in step 9. If several people will share the library, ask who they are and write the cadence table in `CLAUDE.md` with their names.
 
 9. **Run and verify.**
    ```
