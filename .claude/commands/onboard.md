@@ -107,7 +107,7 @@ Now edit, in this order. Each step names the file and what changes.
    ```
    All four must pass. If `--eval` fails, the assertion or the page is wrong, fix it now rather than leaving a failing check on day one. If `--balance` lists a page, add it to the onboard log entry.
 
-10. **Commit.** `git add -A && git commit -m "onboard: library set up for <name>"`.
+10. **Commit.** `git add -A && git commit -m "onboard: library set up for <name>"`. If git says it does not know who they are, which happens on a machine where git has never been set up, ask for the name and email they want on their own history and set them for this library only with `git config user.name "<name>"` and `git config user.email "<email>"`, then commit again. Their books stay on their machine, so any address will do.
 
 ---
 
@@ -119,5 +119,6 @@ Tell them, briefly:
 - The three things they should read and correct if wrong: the hats list, the quality filter, and the voice section. Those are judgement calls you made from an interview, and they should be checked.
 - That the example page is fictional and how to delete it.
 - That `/onboard` can be re-run when a role is added or something changes, and it will read `profile.md` and ask only about the difference.
+- What to do next, as their first real step. Put three to five recent documents from one piece of current work into `inbox/pending/`, by dragging them into the folder or into this window, and say "take this in". Then ask a question about that work in plain words and see the answer come back with its sources. Offer to do the first ingest with them now.
 
 Do not summarise the architecture. They cloned the repository, they have the README.
