@@ -49,7 +49,7 @@ Maps to: every page and answer from now on.
 1. **`wiki/reference/profile.md`.** The three answers, with frontmatter (`title`, `type: reference`, `hat: bridging`, `created` and `updated` today) and `own_hats: [...]` with the keys of the hats nobody outside chases. Leave out `shaped:`, which `/shape` sets.
 2. **`CLAUDE.md`.** Rewrite the opening paragraph from answer 1 and the hats list from answer 2. Leave every other `<placeholder>` for `/shape`.
 3. **`wiki/hats/`.** One router page per hat, using the template in `wiki/hats/README.md`, with a short `name:` that is the hat's name as the owner says it, since that is what the app shows. Delete `example-hat.md`, and replace its line in `wiki/index.md` with one line per real hat. Move the example case to one of the real hats by changing its `hat:` field, and say in its TL;DR that it is fictional.
-4. **`wiki/log.md`.** Replace the template log entries with one entry, dated today, `## YYYY-MM-DD onboard | Library set up for <name> (initials)`, naming by path every page you created or changed. That entry is the opening balance.
+4. **`wiki/log.md`.** Replace the template log entries with one entry, dated today, `## YYYY-MM-DD onboard | Library set up for <name> (initials)`, naming by path every page you created, changed or removed. That entry is the opening balance.
 5. **Run and verify.**
    ```
    python3 .claude/scripts/fmquery.py --dashboard

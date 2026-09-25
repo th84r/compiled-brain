@@ -48,7 +48,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from vocabulary import CLOSED, STATUS_VALUES, canonical_status, is_status_word  # noqa: E402
 
 CONTRACT = 1
-FEATURES = ["balance", "eval", "stale", "list", "search", "hats", "changes", "status-words"]
+FEATURES = ["balance", "eval", "stale", "list", "search", "hats", "changes", "status-words",
+            "ledger", "agree"]
 
 # ---------------------------------------------------------------- vocabulary
 # Status words live in vocabulary.py, shared with .claude/hooks/validate.py,
@@ -345,6 +346,19 @@ JOURNAL_PATH_RX = re.compile(
     r"[\w\u00c0-\u024f][\w\u00c0-\u024f\-./]*?(?:\.md|/))(?![\w])")
 
 
+def names_page(rel, text):
+    """True when journal text names a page, by path, by folder or by name."""
+    if rel in text or rel[:-3] in text:
+        return True
+    folder, stem = os.path.dirname(rel), os.path.splitext(os.path.basename(rel))[0]
+    name = os.path.basename(folder) if stem.lower() in GENERIC_STEMS else stem
+    if not name:
+        return False
+    if stem.lower() in GENERIC_STEMS and folder + "/" in text:
+        return True
+    return re.search(r"(?<![\w-])" + re.escape(name) + r"(?![\w-])", text) is not None
+
+
 def find_unbalanced(pages):
     """The trial balance between the journal and the accounts.
 
@@ -389,15 +403,7 @@ def find_unbalanced(pages):
         opened = None
 
     def posted(rel):
-        if rel in journal or rel[:-3] in journal:
-            return True
-        folder, stem = os.path.dirname(rel), os.path.splitext(os.path.basename(rel))[0]
-        name = os.path.basename(folder) if stem.lower() in GENERIC_STEMS else stem
-        if not name:
-            return False
-        if stem.lower() in GENERIC_STEMS and folder + "/" in journal:
-            return True
-        return re.search(r"(?<![\w-])" + re.escape(name) + r"(?![\w-])", journal) is not None
+        return names_page(rel, journal)
 
     unposted, opening = [], 0
     for fm in pages:
@@ -421,6 +427,190 @@ def find_unbalanced(pages):
     dangling = sorted({t for t in (m.group(1).rstrip("/") for m in JOURNAL_PATH_RX.finditer(journal))
                        if t not in files and t not in dirs and os.path.basename(t) not in names})
     return unposted, dangling, opening
+
+
+# -------------------------------------------------------------------- ledger
+LEDGER_FILE = os.path.join(ROOT, ".claude", "ledger")
+LEDGER_EXEMPT_TYPES = ("workflow", "index", "")
+
+
+def ledger_opened():
+    """The commit the strict ledger opened at, or None when it is not open."""
+    if not os.path.isfile(LEDGER_FILE):
+        return None
+    for line in open(LEDGER_FILE, encoding="utf-8"):
+        line = line.strip()
+        if line and not line.startswith("#"):
+            return line.split()[0]
+    return None
+
+
+def open_ledger():
+    sha = git("rev-parse", "HEAD").strip()
+    with open(LEDGER_FILE, "w", encoding="utf-8") as f:
+        f.write("# The strict ledger opened here. From the next commit on, every commit\n"
+                "# that changes a page must add a journal entry naming it, or a later\n"
+                "# entry must name the commit. Written by fmquery.py --open-ledger.\n"
+                f"{sha} {TODAY.isoformat()}\n")
+    return sha
+
+
+def _journal_added(rev_args):
+    """The journal lines a commit or a working-tree diff added."""
+    out = git(*rev_args, "--", "wiki/log.md", "wiki/log")
+    return "\n".join(l[1:] for l in out.splitlines() if l.startswith("+") and not l.startswith("+++"))
+
+
+def _needs_posting(path, by_path):
+    if not path.startswith("wiki/") or not path.endswith(".md"):
+        return False
+    rel = path[5:]
+    if rel in ("log.md", "status.md") or rel.startswith("log/") or os.path.basename(rel) == "index.md":
+        return False
+    fm = by_path.get(rel)
+    if fm is not None and str(fm.get("type", "")).lower() in LEDGER_EXEMPT_TYPES:
+        return False
+    if fm is None and os.path.isfile(os.path.join(WIKI, rel)):
+        return False  # on disk but not loaded, archive or assets
+    return True
+
+
+def ledger_check(pages):
+    """The trial balance held per commit.
+
+    The journal-wide rule in find_unbalanced only asks that a page was named
+    once. Here every commit after the ledger opened that adds, changes, moves
+    or removes a page must itself add a journal entry naming that page. An
+    entry in a later commit counts when it names the commit by its short
+    hash, which is how a late posting (efterpostering) is written. Merge
+    commits are left out, their parents carry the postings.
+    """
+    res = {"opened": ledger_opened(), "unposted_commits": [], "pending": [], "checked": 0}
+    if not res["opened"] or not os.path.isdir(os.path.join(ROOT, ".git")):
+        return res
+    by_path = {fm["_path"]: fm for fm in pages}
+    try:
+        commits = git("rev-list", "--no-merges", "--reverse", f"{res['opened']}..HEAD").split()
+    except RuntimeError:
+        # The opening commit is not in this history, a library copied without
+        # its .git, say. Hold every commit but the root to the rule.
+        commits = git("rev-list", "--no-merges", "--reverse", "HEAD").split()[1:]
+    added = {c: _journal_added(["show", "--format=", "-U0", c]) for c in commits}
+    later = ""
+    for c in reversed(commits):
+        added[c + ":later"] = later
+        later += "\n" + added[c]
+    for c in commits:
+        names = git("diff-tree", "-r", "--no-commit-id", "--name-status", "-M", c)
+        missing = []
+        for line in names.splitlines():
+            parts = line.split("\t")
+            if len(parts) < 2 or not _needs_posting(parts[-1], by_path):
+                continue
+            paths = [p[5:] for p in parts[1:]]
+            if any(names_page(r, added[c]) for r in paths):
+                continue
+            if c[:7] in added[c + ":later"]:
+                continue
+            missing.append(paths[-1])
+        res["checked"] += 1
+        if missing:
+            subj = git("log", "-1", "--format=%s", c).strip()
+            res["unposted_commits"].append({"commit": c, "subject": subj, "pages": sorted(set(missing))})
+    # Work in progress, reported and never counted against the balance.
+    pend = git("diff", "HEAD", "-U0", "--name-status", "-M", "--", "wiki").splitlines()
+    wadded = _journal_added(["diff", "HEAD", "-U0"])
+    for line in pend:
+        parts = line.split("\t")
+        if len(parts) >= 2 and _needs_posting(parts[-1], by_path) and not names_page(parts[-1][5:], wadded):
+            res["pending"].append(parts[-1][5:])
+    return res
+
+
+# --------------------------------------------------------------- key figures
+FIGURES_HEADING = re.compile(r"^##+\s*(?:Key figures|N\u00f8gletal|Noegletal|N\u00f8kkeltall)\s*$", re.M | re.I)
+DATED = re.compile(r"\b(?:19|20)\d\d\b|\d{1,2}[./]\d{1,2}|~~|\b(?:until|from|was|previously|formerly|"
+                   r"superseded|old|til|fra|var|tidligere|for\u00e6ldet|gammel|gamle|aldrig|never|"
+                   r"tidigare|f\u00f6re|innan)\b", re.I)
+WINDOW = 120
+
+
+def key_figures():
+    """Rows from the key figures table in wiki/reference/eval-set.md.
+
+    Columns key | value | page | was | also called. was holds earlier values
+    separated by ';', also called other names for the key, separated by ','.
+    """
+    p = os.path.join(WIKI, "reference", "eval-set.md")
+    if not os.path.isfile(p):
+        return []
+    txt = open(p, encoding="utf-8").read()
+    m = FIGURES_HEADING.search(txt)
+    if not m:
+        return []
+    block = txt[m.end():]
+    nxt = re.search(r"^##\s", block, re.M)
+    block = block[:nxt.start()] if nxt else block
+    rows = []
+    for line in block.splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        c = [x.strip() for x in line.strip().strip("|").split("|")]
+        if len(c) < 3 or set(c[0]) <= set("-: ") or c[0].lower() in ("key", "n\u00f8gle", "noegle"):
+            continue
+        c += [""] * (5 - len(c))
+        rows.append({"key": c[0], "value": c[1], "page": c[2],
+                     "was": [x.strip() for x in c[3].split(";") if x.strip()],
+                     "names": [c[0]] + [x.strip() for x in c[4].split(",") if x.strip()]})
+    return rows
+
+
+def _norm(s):
+    return re.sub(r"\s+", " ", str(s).replace("\u00a0", " ")).strip().lower()
+
+
+def agree_results(pages):
+    """Key figures agree across the library.
+
+    Two deterministic checks. The value stands on its own page. And no page
+    states an earlier value within a line's reach of the figure's name
+    unless the passage dates it, a year, a date, a strikethrough, or a word
+    such as until, was or previously. That finds the copy nobody updated.
+    """
+    by_path = {fm["_path"]: fm for fm in pages}
+    res = {"figures": 0, "failures": []}
+    for f in key_figures():
+        res["figures"] += 1
+        home = by_path.get(f["page"])
+        text = _norm((home or {}).get("_body", "") + " " + " ".join(str(v) for k, v in (home or {}).items()
+                                                                   if not k.startswith("_")))
+        if home is None or _norm(f["value"]) not in text:
+            res["failures"].append({"key": f["key"], "kind": "home", "page": f["page"],
+                                    "detail": "page not found" if home is None else f"does not state {f['value']}"})
+        if not f["was"]:
+            continue
+        names = [re.compile(r"(?<![\w-])" + re.escape(_norm(n)) + r"(?![\w-])") for n in f["names"] if n]
+        for fm in pages:
+            if fm["_path"].startswith("archive/") or fm["_path"] in ("reference/eval-set.md", "status.md"):
+                continue  # the archive keeps old values, the table and the dashboard are derived
+            for line in fm.get("_body", "").splitlines():
+                ln = _norm(line)
+                for old in f["was"]:
+                    o = _norm(old)
+                    for m in re.finditer(re.escape(o), ln):
+                        # a figure inside a longer number is not the figure
+                        if (m.start() > 0 and ln[m.start() - 1].isdigit()) or \
+                                (m.end() < len(ln) and ln[m.end()].isdigit()):
+                            continue
+                        lo, hi = max(0, m.start() - WINDOW), m.end() + WINDOW
+                        window = ln[lo:hi]
+                        if not any(n.search(window) for n in names) or DATED.search(window):
+                            continue
+                        res["failures"].append({"key": f["key"], "kind": "stale", "page": fm["_path"],
+                                                "detail": f"states {old} without a date",
+                                                "context": line.strip()[:160]})
+    res["failed"] = len(res["failures"])
+    return res
 
 
 def tokens(s):
@@ -813,6 +1003,9 @@ def main():
     ap.add_argument("--changes", metavar="REF", help="what a commit or A..B range changed")
     ap.add_argument("--json", action="store_true", help="print the report as JSON")
     ap.add_argument("--contract", action="store_true", help="print the JSON contract version")
+    ap.add_argument("--agree", action="store_true", help="key figures agree across the library")
+    ap.add_argument("--open-ledger", action="store_true",
+                    help="hold every commit from here on to the balance")
     ap.add_argument("--review-before"); ap.add_argument("--expires-before"); ap.add_argument("--updated-before")
     ap.add_argument("--sort"); ap.add_argument("--desc", action="store_true")
     a = ap.parse_args()
@@ -821,6 +1014,21 @@ def main():
         return emit({"features": FEATURES, "status_values": list(STATUS_VALUES)})
     if a.dashboard:
         return build_dashboard(load_pages())
+    if a.open_ledger:
+        sha = open_ledger()
+        return print(f"Ledger opened at {sha[:7]}. Commit .claude/ledger.")
+    if a.agree:
+        res = agree_results(load_pages())
+        if a.json:
+            emit(res)
+        else:
+            for f in res["failures"]:
+                print(f"  FAIL  {f['key']}  {f['page']}  {f['detail']}")
+                if f.get("context"):
+                    print(f"        {f['context']}")
+            print(f"# agree  {res['figures'] - len({x['key'] for x in res['failures']})} of "
+                  f"{res['figures']} key figures agree  [{TODAY}]")
+        return sys.exit(1 if res["failed"] else 0)
     if a.eval:
         return sys.exit(run_eval(a.json))
     if a.changes:
@@ -864,13 +1072,16 @@ def main():
 
     if a.balance:
         unposted, dangling, opening = find_unbalanced(pages)
+        led = ledger_check(pages)
+        bad = len(unposted) + len(dangling) + len(led["unposted_commits"])
         if a.json:
-            emit({"balanced": not unposted and not dangling,
-                  "out_of_balance": len(unposted) + len(dangling), "opening": opening,
+            emit({"balanced": bad == 0,
+                  "out_of_balance": bad, "opening": opening,
                   "unposted": [page_json(fm) for fm in sorted(unposted, key=lambda x: x["_path"])],
-                  "dangling": dangling})
-            return sys.exit(1 if unposted or dangling else 0)
-        print(f"# Trial balance  [{len(unposted) + len(dangling)} out of balance, "
+                  "dangling": dangling, "ledger_opened": led["opened"],
+                  "unposted_commits": led["unposted_commits"], "pending": led["pending"]})
+            return sys.exit(1 if bad else 0)
+        print(f"# Trial balance  [{bad} out of balance, "
               f"{opening} pages in the opening balance]")
         print(f"  accounts without a posting ({len(unposted)})")
         for fm in sorted(unposted, key=lambda x: x["_path"]):
@@ -878,7 +1089,20 @@ def main():
         print(f"  postings without an account ({len(dangling)})")
         for t in dangling:
             print(f"    {t}")
-        return sys.exit(1 if unposted or dangling else 0)
+        if led["opened"]:
+            print(f"  commits without a posting ({len(led['unposted_commits'])} of {led['checked']} "
+                  f"since {led['opened'][:7]})")
+            for c in led["unposted_commits"]:
+                print(f"    {c['commit'][:7]} {c['subject'][:60]}")
+                for pth in c["pages"]:
+                    print(f"      {pth}")
+            if led["pending"]:
+                print(f"  not yet posted, uncommitted ({len(led['pending'])})")
+                for pth in led["pending"]:
+                    print(f"    {pth}")
+        else:
+            print("  ledger not open, run --open-ledger to hold every commit to the rule")
+        return sys.exit(1 if bad else 0)
 
     if a.hats:
         rep, other = hats_report(pages)

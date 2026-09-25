@@ -27,13 +27,15 @@ The project is named after Luca Pacioli, a Franciscan friar who taught mathemati
 | The trial balance, proving both sides agree | `fmquery.py --balance` |
 | A correcting entry, because you never rub out | Supersede with a date rather than overwrite |
 | A reference and a date on every entry | A source and a date on every fact |
-| The auditor | `fmquery.py --eval`, assertions with no model involved |
+| The auditor | `fmquery.py --eval` and `--agree`, assertions and key figures with no model involved |
 
 ## Why double
 
 In double-entry bookkeeping every transaction is written twice, and the two sides must agree. That agreement is the proof that nothing went missing.
 
-Here every fact is written twice too. Once by date in the journal, `wiki/log.md`, saying when it arrived and why. Once by subject on its page, where it is reconciled against what was already known. `fmquery.py --balance` holds the two against each other. A page whose `updated` date falls inside the journal's window and that no journal entry names, or a journal entry naming a page that is gone, shows up as out of balance.
+Here every fact is written twice too. Once by date in the journal, `wiki/log.md`, saying when it arrived and why. Once by subject on its page, where it is reconciled against what was already known. `fmquery.py --balance` holds the two against each other. Once the ledger is open, every commit has to balance on its own. A commit that changes a page without adding a journal entry that names it is out of balance until a late entry names that commit. A journal entry naming a page that is gone is out of balance too.
+
+The facts that get copied, a price or a deadline, go in a small table of key figures with their earlier values. `fmquery.py --agree` fails when a figure is missing from its own page, or when another page still states an old value next to the figure's name without dating it. That is the copy nobody updated.
 
 Anything that leaves the library, in a report, a decision or another person's AI, has to show where each fact came from and when. The journal is that trail, and the balance is how you know the trail is complete.
 

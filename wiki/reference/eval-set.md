@@ -34,6 +34,14 @@ Columns are page (wiki-relative path), field (a frontmatter key, or `body` for t
 | cases/example-talk/overview.md | body | ~abstract |
 | workflows/frontmatter-schema.md | type | workflow |
 
+## Key figures
+
+The figures that are copied to more than one page, a price, a count, a deadline, and so are the first to go stale on one of them. Columns are key, value (as it is written on the page), page (where the figure lives), was (earlier values, separated by `;`) and also called (other names for it, separated by `,`). `fmquery.py --agree` fails when the value is missing from its page, or when another page still states an earlier value near the figure's name without dating it. A year, a date, a strikethrough or a word such as until, was or previously counts as dating it. When a figure changes, write the new value here and move the old one to was, the same way a page keeps the old fact with a date.
+
+| key | value | page | was | also called |
+|---|---|---|---|---|
+| Expected audience | about 120 | cases/example-talk/overview.md | about 80 | audience |
+
 ## Questions
 
 | # | Question | Expected answer | Source page |

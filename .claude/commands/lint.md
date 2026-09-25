@@ -14,12 +14,13 @@ python3 .claude/scripts/fmquery.py --orphans
 python3 .claude/scripts/fmquery.py --balance
 python3 .claude/scripts/fmquery.py --dashboard
 python3 .claude/scripts/fmquery.py --eval
+python3 .claude/scripts/fmquery.py --agree
 python3 .claude/scripts/fmquery.py --rotate-log --dry-run
 ```
 
-A failed assertion in `--eval` outranks everything else in the report. It means a fact the owner relies on has changed or a page has drifted.
+A failed assertion in `--eval` outranks everything else in the report. It means a fact the owner relies on has changed or a page has drifted. A failure in `--agree` ranks with it, a key figure missing from its own page or an old value still standing undated on another page. Fix the stale copy by updating it or by dating it, and never by deleting the old value from the table.
 
-An account without a posting in `--balance` comes next. A page changed with no journal entry is a fact nobody can trace, so the fix is a log entry saying when and why, written from what the page and git history show. Never invent the reason.
+An account without a posting in `--balance` comes next, and so does a commit without a posting. A page changed with no journal entry is a fact nobody can trace, so the fix is a late entry saying when and why, naming the commit by its short hash, written from what the page and git history show. Never invent the reason.
 
 ## 2. Check what a script cannot
 

@@ -90,6 +90,76 @@ if os.path.isdir(os.path.join(ROOT, ".git")):
     rc, d = as_json(["--changes", "no-such-commit"])
     check("json changes reports a bad commit", rc == 2 and "error" in d, str(d)[:200])
 
+# The ledger, every commit balancing on its own. Played out on a throwaway
+# git copy: a silent change must be caught, a late entry naming the commit
+# must clear it, and a commit that posts its own entry must pass.
+def _git(cwd, *args):
+    return subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@t", *args],
+                          cwd=cwd, capture_output=True, text=True)
+
+
+if shutil.which("git"):
+    ltmp = tempfile.mkdtemp()
+    try:
+        for d in ("wiki", ".claude"):
+            shutil.copytree(os.path.join(ROOT, d), os.path.join(ltmp, d),
+                            ignore=shutil.ignore_patterns("__pycache__"))
+        _git(ltmp, "init", "-q")
+        _git(ltmp, "add", "-A")
+        _git(ltmp, "commit", "-qm", "root")
+        lf = os.path.join(ltmp, ".claude", "scripts", "fmquery.py")
+        subprocess.run([PY, lf, "--open-ledger"], capture_output=True, cwd=ltmp)
+        _git(ltmp, "add", "-A")
+        _git(ltmp, "commit", "-qm", "open ledger")
+        page = next((os.path.join(r, f) for r, _, fs in os.walk(os.path.join(ltmp, "wiki", "cases"))
+                     for f in fs if f == "overview.md"), None)
+        if page:
+            rel = os.path.relpath(page, os.path.join(ltmp, "wiki"))
+            open(page, "a", encoding="utf-8").write("\nA silent line.\n")
+            _git(ltmp, "commit", "-qam", "silent")
+            sha = _git(ltmp, "rev-parse", "--short=7", "HEAD").stdout.strip()
+            r = subprocess.run([PY, lf, "--balance", "--json"], capture_output=True, text=True, cwd=ltmp)
+            d = json.loads(r.stdout.strip().splitlines()[-1])
+            check("ledger catches a silent commit", r.returncode == 1
+                  and any(rel in c["pages"] for c in d.get("unposted_commits", [])), r.stdout[:300])
+            open(os.path.join(ltmp, "wiki", "log.md"), "a", encoding="utf-8").write(
+                f"\n## {datetime.date.today()} correction | Late entry\n\nA line was added in {sha} without an entry.\n")
+            _git(ltmp, "commit", "-qam", "late entry")
+            r = subprocess.run([PY, lf, "--balance"], capture_output=True, text=True, cwd=ltmp)
+            check("a late entry naming the commit clears it", r.returncode == 0, r.stdout[-300:])
+            open(page, "a", encoding="utf-8").write("\nA posted line.\n")
+            open(os.path.join(ltmp, "wiki", "log.md"), "a", encoding="utf-8").write(
+                f"\n## {datetime.date.today()} update | Posted\n\n{rel} got a line.\n")
+            _git(ltmp, "commit", "-qam", "update | posted")
+            r = subprocess.run([PY, lf, "--balance"], capture_output=True, text=True, cwd=ltmp)
+            check("a commit that posts its own entry balances", r.returncode == 0, r.stdout[-300:])
+
+        # Key figures. A stale undated copy fails, a dated one passes.
+        figs = subprocess.run([PY, lf, "--agree", "--json"], capture_output=True, text=True, cwd=ltmp)
+        fd = json.loads(figs.stdout.strip().splitlines()[-1])
+        check("agree runs", "figures" in fd, figs.stdout[:200])
+        rows = []
+        sys.path.insert(0, os.path.dirname(lf))
+        if fd.get("figures"):
+            import importlib.util as _ilu
+            _spec = _ilu.spec_from_file_location("fmq_copy", lf)
+            _m = _ilu.module_from_spec(_spec)
+            _spec.loader.exec_module(_m)
+            rows = [r_ for r_ in _m.key_figures() if r_["was"]]
+        if rows:
+            f0 = rows[0]
+            probe = os.path.join(ltmp, "wiki", "zz-agree-probe.md")
+            open(probe, "w", encoding="utf-8").write(
+                f"---\ntitle: probe\ntype: reference\n---\n\nThe {f0['names'][0]} is {f0['was'][0]} today.\n")
+            r = subprocess.run([PY, lf, "--agree"], capture_output=True, text=True, cwd=ltmp)
+            check("agree catches a stale copy", r.returncode == 1 and "zz-agree-probe" in r.stdout, r.stdout[:300])
+            open(probe, "w", encoding="utf-8").write(
+                f"---\ntitle: probe\ntype: reference\n---\n\nThe {f0['names'][0]} was {f0['was'][0]} until 2025.\n")
+            r = subprocess.run([PY, lf, "--agree"], capture_output=True, text=True, cwd=ltmp)
+            check("agree accepts a dated old value", r.returncode == 0, r.stdout[:300])
+    finally:
+        shutil.rmtree(ltmp, ignore_errors=True)
+
 # Status words in all four languages. A Norwegian closed case and a Swedish
 # waiting one must be read as such, and a made-up word must not.
 sys.path.insert(0, HERE)
