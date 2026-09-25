@@ -188,7 +188,7 @@ check("permissions allow no shell command that can write where it likes",
 check("the agent may not change .claude", "Edit(.claude/**)" in deny)
 check("permissions deny the network from the shell", "Bash(curl *)" in deny and "Bash(wget *)" in deny)
 check("permissions deny push and self-editing", any(x.startswith("Bash(git push") for x in deny)
-      and "Edit(.claude/settings.json)" in deny)
+      and any(r in deny for r in ("Edit(.claude/settings.json)", "Edit(.claude/**)")))
 
 # The example fixture is meant to be deleted during onboarding, so nothing
 # here may name it. Discover a page instead, and say so when there is none.
