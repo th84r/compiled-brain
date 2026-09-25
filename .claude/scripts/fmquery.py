@@ -530,8 +530,8 @@ def ledger_check(pages):
 # --------------------------------------------------------------- key figures
 FIGURES_HEADING = re.compile(r"^##+\s*(?:Key figures|N\u00f8gletal|Noegletal|N\u00f8kkeltall)\s*$", re.M | re.I)
 DATED = re.compile(r"\b(?:19|20)\d\d\b|\d{1,2}[./]\d{1,2}|~~|\b(?:until|from|was|previously|formerly|"
-                   r"superseded|old|til|fra|var|tidligere|for\u00e6ldet|gammel|gamle|aldrig|never|"
-                   r"tidigare|f\u00f6re|innan)\b", re.I)
+                   r"superseded|old|before|corrected|til|fra|var|tidligere|for\u00e6ldet|gammel|gamle|aldrig|never|"
+                   r"f\u00f8r|rettet|rettelse|korrigeret|tidigare|f\u00f6re|innan)\b", re.I)
 WINDOW = 120
 
 
@@ -593,7 +593,8 @@ def agree_results(pages):
         for fm in pages:
             if fm["_path"].startswith("archive/") or fm["_path"] in ("reference/eval-set.md", "status.md"):
                 continue  # the archive keeps old values, the table and the dashboard are derived
-            for line in fm.get("_body", "").splitlines():
+            fields = [f"{k}: {v}" for k, v in fm.items() if not k.startswith("_") and isinstance(v, str)]
+            for line in fields + fm.get("_body", "").splitlines():
                 ln = _norm(line)
                 for old in f["was"]:
                     o = _norm(old)
