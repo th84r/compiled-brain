@@ -14,6 +14,10 @@ Three rules for the whole run.
 
 If `wiki/reference/profile.md` already exists, this is a re-run. Read it first, ask only what has changed, and keep everything else.
 
+**Start with a short welcome.** Before the first question, tell them in plain words what is about to happen. Something like: "I will ask you nine short questions about your work, it takes about ten minutes. Short answers are fine, and you can say skip and come back to it later. Then I shape the library to fit, check that everything works, and show you how to use it." Assume they may be new to terminals and agents, avoid jargon, and explain any file or term the first time it comes up.
+
+**Show progress.** Number the questions as you go, "Question 3 of 9", so they always know how far they are.
+
 ---
 
 ## Part 1, the interview
@@ -113,12 +117,18 @@ Now edit, in this order. Each step names the file and what changes.
 
 ## Part 3, report
 
-Tell them, briefly:
+Keep this short and friendly, it is the moment they decide whether to keep using it. Tell them, briefly:
 
 - Which files changed and what each now says, in one line per file.
 - The three things they should read and correct if wrong: the hats list, the quality filter, and the voice section. Those are judgement calls you made from an interview, and they should be checked.
 - That the example page is fictional and how to delete it.
 - That `/onboard` can be re-run when a role is added or something changes, and it will read `profile.md` and ask only about the difference.
+- How to use it from now on, as a short list of things they can simply say:
+  - "take this in", after putting files in `inbox/pending/`
+  - "what do we know about ...", to ask the library
+  - "open a case for ...", when a new piece of work starts
+  - "weekly status", for what is due and what has gone quiet
+  They never need to type the commands, plain words are enough.
 - What to do next, as their first real step. Put three to five recent documents from one piece of current work into `inbox/pending/`, by dragging them into the folder or into this window, and say "take this in". Then ask a question about that work in plain words and see the answer come back with its sources. Offer to do the first ingest with them now.
 
 Do not summarise the architecture. They cloned the repository, they have the README.
