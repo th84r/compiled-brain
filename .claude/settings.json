@@ -5,12 +5,9 @@
       "Glob",
       "Grep",
       "Edit(wiki/**)",
-      "Write(wiki/**)",
       "Edit(output/**)",
-      "Write(output/**)",
       "Edit(data/**)",
-      "Write(data/**)",
-      "Write(inbox/**)",
+      "Edit(inbox/**)",
       "Bash(python3 .claude/scripts/*)",
       "Bash(python3 .claude/hooks/*)",
       "Bash(git status*)",
@@ -39,8 +36,7 @@
       "Bash(git reset --hard*)",
       "Bash(git clean *)",
       "Bash(rm -rf *)",
-      "Edit(.claude/settings.json)",
-      "Write(.claude/settings.json)"
+      "Edit(.claude/settings.json)"
     ]
   },
   "hooks": {

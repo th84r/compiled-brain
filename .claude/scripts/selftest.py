@@ -176,7 +176,10 @@ try:
 except Exception:
     perm = {}
 allow, deny = perm.get("allow", []), perm.get("deny", [])
-check("permissions allow writing the wiki", "Write(wiki/**)" in allow and "Edit(wiki/**)" in allow)
+check("permissions allow writing the wiki", "Edit(wiki/**)" in allow)
+# Claude Code reads only Edit(path) rules for files, and they cover every tool that writes one.
+# A Write(path) rule is ignored with a warning at every start, so none may ship.
+check("file rules are Edit rules only", not any(r.startswith("Write(") for r in allow + deny))
 check("permissions allow the library's scripts", "Bash(python3 .claude/scripts/*)" in allow)
 check("permissions deny the network from the shell", "Bash(curl *)" in deny and "Bash(wget *)" in deny)
 check("permissions deny push and self-editing", any(x.startswith("Bash(git push") for x in deny)
