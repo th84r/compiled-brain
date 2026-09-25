@@ -108,7 +108,7 @@ The log is append-only and grows without bound, which makes it a poor retrieval 
 
 ## Adapting it
 
-`/onboard` handles the changing. It interviews the owner and rewrites the parts below. This section says what they are and why, for anyone doing it by hand or checking what the onboarding did.
+`/onboard` and `/shape` handle the changing. They interview the owner and rewrites the parts below. This section says what they are and why, for anyone doing it by hand or checking what the onboarding did.
 
 Three things almost always need changing, and one thing almost never should.
 

@@ -61,6 +61,57 @@ try:
 finally:
     shutil.rmtree(probe_dir, ignore_errors=True)
 
+# The JSON contract with the Mac app. Every report parses, carries the
+# contract number, and the balance keeps its exit code in JSON mode.
+def as_json(args):
+    rc, out = run([FMQ] + args + ["--json"])
+    try:
+        return rc, json.loads(out.strip().splitlines()[-1])
+    except Exception:
+        return rc, {"_raw": out[:200]}
+
+
+rc, d = as_json(["--contract"])
+check("json contract number", d.get("contract") == 1 and "changes" in d.get("features", []), str(d)[:200])
+rc, d = as_json(["--balance"])
+check("json balance", "balanced" in d and rc == (0 if d.get("balanced") else 1), str(d)[:200])
+rc, d = as_json(["--eval"])
+check("json eval", "passed" in d and "failures" in d, str(d)[:200])
+rc, d = as_json(["--stale"])
+check("json stale", isinstance(d.get("stale"), list), str(d)[:200])
+rc, d = as_json(["--hats"])
+check("json hats have display names", isinstance(d.get("hats"), list)
+      and all("title" in h and "own" in h for h in d["hats"]), str(d)[:200])
+rc, d = as_json(["--type", "case"])
+check("json page list", isinstance(d.get("pages"), list), str(d)[:200])
+if os.path.isdir(os.path.join(ROOT, ".git")):
+    rc, d = as_json(["--changes", "HEAD"])
+    check("json changes for the last commit", rc == 0 and "pages" in d and "journal" in d, str(d)[:200])
+    rc, d = as_json(["--changes", "no-such-commit"])
+    check("json changes reports a bad commit", rc == 2 and "error" in d, str(d)[:200])
+
+# Status words in all four languages. A Norwegian closed case and a Swedish
+# waiting one must be read as such, and a made-up word must not.
+sys.path.insert(0, HERE)
+from vocabulary import canonical_status  # noqa: E402
+for word, want in (("avsluttet", "closed"), ("väntar", "waiting"), ("i bero", "on_hold"),
+                   ("afventer (svar fra X)", "waiting"), ("Aktiv", "active"), ("forhandling", "")):
+    check(f"status word {word!r}", canonical_status(word) == want, canonical_status(word))
+
+# The permissions the library ships with. Writing the wiki and running its
+# own scripts is allowed, reaching the network from the shell and pushing
+# are not, and the agent may not widen its own permissions.
+try:
+    perm = json.load(open(os.path.join(ROOT, ".claude", "settings.json"))).get("permissions", {})
+except Exception:
+    perm = {}
+allow, deny = perm.get("allow", []), perm.get("deny", [])
+check("permissions allow writing the wiki", "Write(wiki/**)" in allow and "Edit(wiki/**)" in allow)
+check("permissions allow the library's scripts", "Bash(python3 .claude/scripts/*)" in allow)
+check("permissions deny the network from the shell", "Bash(curl *)" in deny and "Bash(wget *)" in deny)
+check("permissions deny push and self-editing", any(x.startswith("Bash(git push") for x in deny)
+      and "Edit(.claude/settings.json)" in deny)
+
 # The example fixture is meant to be deleted during onboarding, so nothing
 # here may name it. Discover a page instead, and say so when there is none.
 rc, out = run([FMQ, "--type", "case", "--active"])
@@ -99,6 +150,7 @@ try:
     shutil.copytree(os.path.join(ROOT, "wiki"), os.path.join(rtmp, "wiki"))
     os.makedirs(os.path.join(rtmp, ".claude", "scripts"))
     shutil.copy(FMQ, os.path.join(rtmp, ".claude", "scripts", "fmquery.py"))
+    shutil.copy(os.path.join(HERE, "vocabulary.py"), os.path.join(rtmp, ".claude", "scripts", "vocabulary.py"))
     rfmq = os.path.join(rtmp, ".claude", "scripts", "fmquery.py")
     rlog = os.path.join(rtmp, "wiki", "log.md")
     import re as _re
@@ -192,7 +244,8 @@ rc, out = run([VOICE, os.path.join(os.path.dirname(v), "nope.md")])
 check("voice survives a missing file", "SKIPPED" in out and "no such file" in out, out[:200])
 
 for f in ("CLAUDE.md", "README.md", "docs/ARCHITECTURE.md", "docs/ONBOARDING.md",
-          ".claude/commands/onboard.md", ".claude/settings.json",
+          ".claude/commands/onboard.md", ".claude/commands/shape.md",
+          ".claude/scripts/vocabulary.py", ".claude/settings.json",
           "wiki/index.md", "wiki/log.md", "wiki/reference/eval-set.md"):
     check(f"file present {f}", os.path.isfile(os.path.join(ROOT, f)))
 try:

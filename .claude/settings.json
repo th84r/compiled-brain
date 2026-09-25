@@ -1,4 +1,48 @@
 {
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit(wiki/**)",
+      "Write(wiki/**)",
+      "Edit(output/**)",
+      "Write(output/**)",
+      "Edit(data/**)",
+      "Write(data/**)",
+      "Write(inbox/**)",
+      "Bash(python3 .claude/scripts/*)",
+      "Bash(python3 .claude/hooks/*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git mv *)",
+      "Bash(mkdir -p inbox/*)",
+      "Bash(mkdir -p wiki/*)",
+      "Bash(mkdir -p output/*)",
+      "Bash(mv inbox/*)",
+      "Bash(ls *)",
+      "Bash(textutil -convert txt *)"
+    ],
+    "deny": [
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(rsync *)",
+      "Bash(nc *)",
+      "Bash(git push*)",
+      "Bash(git remote *)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean *)",
+      "Bash(rm -rf *)",
+      "Edit(.claude/settings.json)",
+      "Write(.claude/settings.json)"
+    ]
+  },
   "hooks": {
     "PostToolUse": [
       {

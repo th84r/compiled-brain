@@ -42,10 +42,17 @@ ROOT = os.environ.get("CLAUDE_PROJECT_DIR") or os.path.dirname(os.path.dirname(o
 
 MAIN_DIRS = ("/reference/", "/themes/", "/workflows/")
 
-# Keep in sync with .claude/scripts/fmquery.py and the schema page.
-# Nuance belongs in 'next_action', not in the status field, otherwise the
-# dashboard cannot group across pages.
-STATUS_VALUES = ("active", "waiting", "on_hold", "closed")
+# Status words are shared with fmquery.py in .claude/scripts/vocabulary.py,
+# in English, Danish, Norwegian and Swedish. Nuance belongs in 'next_action',
+# otherwise the dashboard cannot group across pages.
+sys.path.insert(0, os.path.join(ROOT, ".claude", "scripts"))
+try:
+    from vocabulary import STATUS_VALUES, is_status_word
+except Exception:  # fail open, as everywhere in this hook
+    STATUS_VALUES = ("active", "waiting", "on_hold", "closed")
+
+    def is_status_word(v):
+        return str(v or "").strip().lower() in STATUS_VALUES
 
 # Characters that should never appear in newly written prose.
 BANNED_CHARS = {
@@ -108,11 +115,12 @@ def check(fp, new_text):
                     st = str(fm.get("status", "")).strip().lower()
                     if not st:
                         issues.append(f"Type '{fm.get('type')}' is missing 'status'.")
-                    elif st not in STATUS_VALUES:
+                    elif not is_status_word(st):
                         issues.append(
                             f"Status '{fm.get('status')}' is outside the schema. "
-                            f"Use one of {', '.join(STATUS_VALUES)} and put the "
-                            "nuance in 'next_action'.")
+                            f"Use one of {', '.join(STATUS_VALUES)}, or the same word in the "
+                            "library's language (see .claude/scripts/vocabulary.py), and put "
+                            "the nuance in 'next_action'.")
 
     # Wikilinks in frontmatter must be quoted, related: ["[[a]]", "[[b]]"].
     # Unquoted, YAML reads them as lists inside lists and Obsidian sees no links.

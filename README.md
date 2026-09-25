@@ -77,7 +77,7 @@ data/                      Structured datasets the analyses are built on
   scripts/voice.py         Style enforcement before anything ships
   loop.md                  The semi-autonomous improvement loop
 docs/ARCHITECTURE.md       Why it is built this way
-docs/ONBOARDING.md         How /onboard shapes the template to your work
+docs/ONBOARDING.md         How /onboard and /shape fit the template to your work
 docs/MEMORY-ZONE.md        The second zone, which lives outside the repo
 ```
 
@@ -113,7 +113,7 @@ python3 .claude/scripts/fmquery.py --dashboard
 python3 .claude/scripts/fmquery.py --search "abstract"
 ```
 
-Then say **"set this up for me"**. The agent runs `/onboard`, interviews you about your work in nine questions, and shapes the library to it: the roles, the quality filter, the page template, the example, the voice rules and the first fact checks. Details in [docs/ONBOARDING.md](docs/ONBOARDING.md).
+Then say **"set this up for me"**. The agent runs `/onboard`, asks three questions, and takes in your first documents with you, so the library answers something real within a few minutes. When you are ready, say **"shape this to my work"** and `/shape` interviews you in nine questions and fits the rest: the quality filter, the page template, the example, the voice rules and the first fact checks. Details in [docs/ONBOARDING.md](docs/ONBOARDING.md).
 
 If you would rather do it by hand, open `CLAUDE.md` and do three things.
 
@@ -137,7 +137,7 @@ Each is a slash command in `.claude/commands/`. You rarely type them. You descri
 | `/eval` | Measure the library against a golden set of questions, track the pass rate |
 | `/distill-skill` | Turn a procedure that worked into a reusable command |
 
-Plus `/onboard` to shape the library to your work, `/new-case`, `/weekly-review`, and a semi-autonomous `/loop` that runs the ladder on its own. `/loop` is Claude Code's built-in command and reads `.claude/loop.md`. With another agent, give it that file as the prompt.
+Plus `/onboard` to get started and `/shape` to fit the library to your work, `/new-case`, `/weekly-review`, and a semi-autonomous `/loop` that runs the ladder on its own. `/loop` is Claude Code's built-in command and reads `.claude/loop.md`. With another agent, give it that file as the prompt.
 
 ## The rules that matter
 

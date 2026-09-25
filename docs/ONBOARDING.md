@@ -2,11 +2,15 @@
 
 The template was generalised from one person's work, and every generalisation leaves a shape behind. The section names, the quality filter, the example and the intent table all carry assumptions about what a working day looks like. Editing those by hand is the step people skip, and a template with the wrong shape gets quietly abandoned around week three.
 
-Start by saying "set this up for me", and the agent runs `/onboard`.
+Setting up happens in two steps, so the library is useful before it is perfect.
 
-## What it does
+**`/onboard`, a couple of minutes.** Say "set this up for me". It asks three things, what you do, which hats you wear and which of them nobody chases, and which language the library is kept in. It writes the profile, the hats and the first journal entry, then takes in your first three to five documents with you and answers a question about them with its sources.
 
-It interviews you. Nine questions, one pass, short answers are fine. Each question maps to a specific file, which is why none of them are optional.
+**`/shape`, about ten minutes, whenever you like.** Say "shape this to my work". It confirms the three answers and asks the rest.
+
+## What /shape does
+
+It interviews you. Nine questions, one pass, short answers are fine, and the three `/onboard` asked are only confirmed. Each question maps to a specific file, which is why none of them are optional.
 
 | It asks about | It writes |
 |---|---|
@@ -20,7 +24,7 @@ It interviews you. Nine questions, one pass, short answers are fine. Each questi
 | Your language and how you write | The voice calibration, ideally from emails you have sent |
 | Facts you would be embarrassed to get wrong | The first real assertions in `eval-set.md` |
 
-Then it edits, runs the dashboard, the eval and the selftest, commits, and tells you which three things to check because they were judgement calls: the hats, the quality filter, and the voice section.
+Then it edits, sets `shaped:` in the profile, runs the dashboard, the eval and the selftest, commits, and tells you which three things to check because they were judgement calls: the hats, the quality filter, and the voice section.
 
 ## What it does not do
 
@@ -30,7 +34,7 @@ It does not touch the scripts. The machinery is the same for a lawyer, a researc
 
 ## Re-running it
 
-`/onboard` reads `wiki/reference/profile.md`, the record of your first answers, and asks only about what has changed. Adding a role, changing what counts as noise, or recalibrating the voice after a year of drift are all re-runs.
+`/shape` reads `wiki/reference/profile.md`, the record of your first answers, and asks only about what has changed. Adding a role, changing what counts as noise, or recalibrating the voice after a year of drift are all re-runs.
 
 ## If you would rather do it by hand
 

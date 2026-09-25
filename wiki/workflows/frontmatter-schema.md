@@ -40,7 +40,7 @@ TL;DR. Every main page carries YAML frontmatter. Dates are ISO, always. Enforced
 
 ## Rules that are easy to get wrong
 
-**Status carries no nuance.** Four values, nothing else. "Active but waiting for a reply" is `status: active` with the nuance in `next_action`. Put it in the status field and the dashboard can no longer group across pages, which is the whole reason the field exists.
+**Status carries no nuance.** Four values, nothing else. "Active but waiting for a reply" is `status: active` with the nuance in `next_action`. Put it in the status field and the dashboard can no longer group across pages, which is the whole reason the field exists. The four values may be written in the library's own language, for example `aktiv`, `afventer`, `i_bero`, `afsluttet` in Danish, with the Norwegian and Swedish words alongside. The full list is in `.claude/scripts/vocabulary.py`, and the tools read every spelling as the same four values.
 
 **Dates are never relative.** "Next month" is not a date. Convert it when you write it.
 

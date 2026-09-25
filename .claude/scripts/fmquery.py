@@ -19,6 +19,13 @@ Examples,
   fmquery.py --eval                        # deterministic assertions, no model needed
   fmquery.py --rotate-log                  # move old log entries to wiki/log/YYYY-MM.md
   fmquery.py --rotate-log --dry-run
+  fmquery.py --hats                        # the hats, with display names and page counts
+  fmquery.py --changes HEAD                # what one commit changed, for a receipt
+  fmquery.py --balance --json              # any report as JSON, for the app
+
+The JSON output is a contract with the Mac app. Every object carries
+"contract", and a field is only ever added, never renamed or removed,
+without raising that number. --contract prints the number and the features.
 
 Design notes,
   Search is built in memory on every call and never persisted. A regenerated
@@ -30,17 +37,23 @@ Standard library only. Python 3.9+.
 import argparse
 import collections
 import datetime
+import json
 import math
 import os
 import re
+import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from vocabulary import CLOSED, STATUS_VALUES, canonical_status, is_status_word  # noqa: E402
+
+CONTRACT = 1
+FEATURES = ["balance", "eval", "stale", "list", "search", "hats", "changes", "status-words"]
+
 # ---------------------------------------------------------------- vocabulary
-# Keep these in sync with wiki/workflows/frontmatter-schema.md and with
-# .claude/hooks/validate.py. Localise freely, the code does not care what the
-# strings are.
-STATUS_VALUES = ("active", "waiting", "on_hold", "closed")
-CLOSED = {"closed", "on_hold"}
+# Status words live in vocabulary.py, shared with .claude/hooks/validate.py,
+# in English, Danish, Norwegian and Swedish. Write status in the library's own
+# language, the tools read all four.
 WORK_TYPES = {"case", "project"}
 HAT_FIELD = "hat"
 
@@ -156,9 +169,7 @@ def load_pages():
 
 
 def is_active(fm):
-    s = str(fm.get("status", "")).lower().strip()
-    first = re.split(r"[ ,(]", s)[0] if s else ""
-    return first not in CLOSED
+    return canonical_status(fm.get("status")) not in CLOSED
 
 
 # ------------------------------------------------------------------ staleness
@@ -451,7 +462,7 @@ def snippet(body, query, width=150):
 
 
 # ---------------------------------------------------------------------- eval
-def run_eval():
+def eval_results():
     """Deterministic assertions from wiki/reference/eval-set.md.
 
     Table under '## Assertions' with columns  page | field | expected.
@@ -459,16 +470,19 @@ def run_eval():
     expected matches exactly, or as a substring when prefixed with ~.
     No model is involved, so this can run in CI and catches schema drift
     and silently changed facts the moment they happen.
+
+    Returns {"passed", "failed", "total", "failures", "note"}.
     """
+    res = {"passed": 0, "failed": 0, "total": 0, "failures": [], "note": ""}
     p = os.path.join(WIKI, "reference", "eval-set.md")
     if not os.path.isfile(p):
-        print("no eval-set.md")
-        return 0
+        res["note"] = "no eval-set.md"
+        return res
     txt = open(p, encoding="utf-8").read()
     m = EVAL_HEADING.search(txt)
     if not m:
-        print("no '## Assertions' section in eval-set.md")
-        return 0
+        res["note"] = "no '## Assertions' section in eval-set.md"
+        return res
     block = txt[m.end():]
     nxt = re.search(r"^##\s", block, re.M)
     block = block[:nxt.start()] if nxt else block
@@ -481,24 +495,38 @@ def run_eval():
             continue
         rows.append(cells[:3])
     pages = {pg["_path"]: pg for pg in load_pages()}
-    passed = failed = 0
+    res["total"] = len(rows)
     for page, field, expected in rows:
         pg = pages.get(page)
         if pg is None:
-            print(f"  FAIL  {page}  (page not found)")
-            failed += 1
+            res["failures"].append({"page": page, "field": field, "expected": expected, "got": None})
             continue
         actual = pg.get("_body", "") if field == "body" else str(pg.get(field, ""))
         ok = (expected[1:].lower() in actual.lower()) if expected.startswith("~") \
             else (actual.strip() == expected)
         if ok:
-            passed += 1
+            res["passed"] += 1
         else:
-            got = actual.strip()[:60].replace("\n", " ")
-            print(f"  FAIL  {page} :: {field}  expected {expected!r}, got {got!r}")
-            failed += 1
-    print(f"# eval  {passed} passed, {failed} failed, {len(rows)} assertions  [{TODAY}]")
-    return 1 if failed else 0
+            res["failures"].append({"page": page, "field": field, "expected": expected,
+                                    "got": actual.strip()[:60].replace("\n", " ")})
+    res["failed"] = len(res["failures"])
+    return res
+
+
+def run_eval(as_json=False):
+    res = eval_results()
+    if as_json:
+        emit(res)
+    elif res["note"]:
+        print(res["note"])
+    else:
+        for f in res["failures"]:
+            if f["got"] is None:
+                print(f"  FAIL  {f['page']}  (page not found)")
+            else:
+                print(f"  FAIL  {f['page']} :: {f['field']}  expected {f['expected']!r}, got {f['got']!r}")
+        print(f"# eval  {res['passed']} passed, {res['failed']} failed, {res['total']} assertions  [{TODAY}]")
+    return 1 if res["failed"] else 0
 
 
 # ------------------------------------------------------------- log rotation
@@ -618,7 +646,7 @@ def build_dashboard(pages):
           for p in sorted(up, key=lambda x: parse_date(x.get("review")))] or [f"- {L['none']}"]
     o.append("")
 
-    odd = [p for p in work if str(p.get("status", "")).lower().strip() not in set(STATUS_VALUES)]
+    odd = [p for p in work if not is_status_word(p.get("status"))]
     o += [f"## {L['odd']} ({len(odd)})", ""]
     o += [f"- {p['_path']}, `{p.get('status', '')}`" for p in sorted(odd, key=lambda x: x["_path"])] \
         or [f"- {L['none']}"]
@@ -628,6 +656,127 @@ def build_dashboard(pages):
     out = os.path.join(WIKI, "status.md")
     open(out, "w", encoding="utf-8").write("\n".join(o) + "\n")
     print(f"Wrote {out}  (active: {len(active)}, overdue: {len(overdue)}, schema deviations: {len(odd)})")
+
+
+# ---------------------------------------------------------------------- json
+def emit(obj):
+    """Prints one JSON object with the contract number first."""
+    out = {"contract": CONTRACT}
+    out.update(obj)
+    print(json.dumps(out, ensure_ascii=False, default=str))
+
+
+def page_json(fm):
+    """A page as the app reads it. status is canonical, status_raw as written."""
+    d = {"path": fm["_path"], "title": fm.get("title") or os.path.splitext(os.path.basename(fm["_path"]))[0],
+         "type": fm.get("type", ""), "status": canonical_status(fm.get("status")),
+         "status_raw": fm.get("status", ""), "hats": [h for h in hats(fm) if h != "?"]}
+    for k in ("next_action", "next_action_date", "updated", "created", "review", "expires", "value"):
+        if fm.get(k):
+            d[k] = fm[k]
+    return d
+
+
+def own_hats():
+    p = os.path.join(WIKI, "reference", "profile.md")
+    if not os.path.isfile(p):
+        return []
+    fm, _ = parse_fm(open(p, encoding="utf-8", errors="ignore").read())
+    return [h.lower() for h in as_list(fm.get("own_hats"))]
+
+
+def hats_report(pages):
+    """Every hat the library uses, with a display name and page counts.
+
+    The display name is the title of the hat's router page in wiki/hats/,
+    so "field-work" can be shown as "Field work". A hat without a
+    router page falls back to its key.
+    """
+    routers = {}
+    hd = os.path.join(WIKI, "hats")
+    if os.path.isdir(hd):
+        for fn in sorted(os.listdir(hd)):
+            if fn.endswith(".md") and fn.lower() not in ("readme.md", "index.md"):
+                fm, _ = parse_fm(open(os.path.join(hd, fn), encoding="utf-8", errors="ignore").read())
+                routers[os.path.splitext(fn)[0].lower()] = fm
+    own = set(own_hats())
+    count, active = collections.Counter(), collections.Counter()
+    for fm in pages:
+        for h in hats(fm):
+            if h == "?":
+                continue
+            count[h] += 1
+            if str(fm.get("type", "")).lower() in WORK_TYPES and is_active(fm):
+                active[h] += 1
+    out = []
+    for key in sorted(set(count) | set(routers)):
+        r = routers.get(key)
+        out.append({"key": key, "title": (r or {}).get("title") or key,
+                    "router": f"hats/{key}.md" if r else None,
+                    "own": key in own, "bridging": key == "bridging",
+                    "pages": count[key], "active_work": active[key]})
+    return out
+
+
+def git(*args):
+    r = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError(r.stderr.strip() or f"git {' '.join(args)} failed")
+    return r.stdout
+
+
+def changes_report(ref):
+    """What one commit, or a range A..B, changed. The receipt after a job.
+
+    Pages are read as they were in that commit, so a receipt for an old
+    commit shows the titles it had then. Journal entries are the '## '
+    headings the change added to wiki/log.md.
+    """
+    if ".." in ref:
+        a, b = ref.split("..", 1)
+        b = b or "HEAD"
+        names = git("diff", "--name-status", "-M", a, b)
+        journal_diff = git("diff", "-U0", a, b, "--", "wiki/log.md")
+        before, after = a, b
+        commits = [c for c in git("rev-list", "--reverse", f"{a}..{b}").split() if c]
+    else:
+        b = ref
+        names = git("diff-tree", "-r", "--root", "--no-commit-id", "--name-status", "-M", b)
+        journal_diff = git("show", "--format=", "-U0", b, "--", "wiki/log.md")
+        before, after = f"{b}^", b
+        commits = [git("rev-parse", b).strip()]
+    head = git("log", "-1", "--format=%H%x00%s%x00%aI", after).rstrip("\n").split("\x00")
+
+    def read_at(rev, path):
+        try:
+            return parse_fm(git("show", f"{rev}:{path}"))[0]
+        except RuntimeError:
+            return {}
+
+    pages, other = [], collections.Counter()
+    for line in names.splitlines():
+        parts = line.split("\t")
+        if len(parts) < 2:
+            continue
+        kind, path = parts[0][0], parts[-1]
+        rel = path[5:] if path.startswith("wiki/") else None
+        if rel in ("log.md", "status.md") or (rel or "").startswith("log/"):
+            continue  # bookkeeping, the journal list covers it
+        if rel is None or not path.endswith(".md") or rel == "index.md":
+            other[path.split("/")[0] if "/" in path else path] += 1
+            continue
+        fm = read_at(before if kind == "D" else after, path)
+        fm["_path"] = rel
+        d = page_json(fm)
+        d["change"] = {"A": "added", "M": "changed", "D": "removed", "R": "moved"}.get(kind, "changed")
+        if kind == "R":
+            d["from"] = parts[1][5:] if parts[1].startswith("wiki/") else parts[1]
+        pages.append(d)
+    journal = [l[4:].strip() for l in journal_diff.splitlines() if l.startswith("+## ")]
+    hat_set = sorted({h for d in pages for h in d["hats"]})
+    return {"commit": head[0], "subject": head[1] if len(head) > 1 else "",
+            "date": head[2] if len(head) > 2 else "", "commits": commits,
+            "pages": pages, "journal": journal, "hats": hat_set, "other": dict(other)}
 
 
 # ---------------------------------------------------------------------- main
@@ -648,14 +797,39 @@ def main():
                     help="trial balance, pages without a log entry and log entries without a page")
     ap.add_argument("--rotate-log", action="store_true", help="archive old log entries by month")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--hats", action="store_true", help="the hats, display names and page counts")
+    ap.add_argument("--changes", metavar="REF", help="what a commit or A..B range changed")
+    ap.add_argument("--json", action="store_true", help="print the report as JSON")
+    ap.add_argument("--contract", action="store_true", help="print the JSON contract version")
     ap.add_argument("--review-before"); ap.add_argument("--expires-before"); ap.add_argument("--updated-before")
     ap.add_argument("--sort"); ap.add_argument("--desc", action="store_true")
     a = ap.parse_args()
 
+    if a.contract:
+        return emit({"features": FEATURES, "status_values": list(STATUS_VALUES)})
     if a.dashboard:
         return build_dashboard(load_pages())
     if a.eval:
-        return sys.exit(run_eval())
+        return sys.exit(run_eval(a.json))
+    if a.changes:
+        try:
+            rep = changes_report(a.changes)
+        except RuntimeError as e:
+            if a.json:
+                emit({"error": str(e)})
+            else:
+                print(f"error: {e}")
+            return sys.exit(2)
+        if a.json:
+            return emit(rep)
+        print(f"# {rep['subject']}  [{rep['commit'][:7]}, {rep['date'][:10]}]")
+        for d in rep["pages"]:
+            print(f"  {d['change']:<8} {d['path']}  {d['title']}")
+        for j in rep["journal"]:
+            print(f"  journal  {j}")
+        for k, n in sorted(rep["other"].items()):
+            print(f"  other    {k} ({n})")
+        return
     if a.rotate_log:
         return rotate_log(a.dry_run)
 
@@ -663,6 +837,8 @@ def main():
 
     if a.links:
         me, inb, outb = links_for(pages, a.links)
+        if a.json:
+            return emit({"page": page_json(me) if me else None, "inbound": inb, "outbound": outb})
         if me is None:
             print(f"not found: {a.links}")
             return
@@ -676,6 +852,12 @@ def main():
 
     if a.balance:
         unposted, dangling, opening = find_unbalanced(pages)
+        if a.json:
+            emit({"balanced": not unposted and not dangling,
+                  "out_of_balance": len(unposted) + len(dangling), "opening": opening,
+                  "unposted": [page_json(fm) for fm in sorted(unposted, key=lambda x: x["_path"])],
+                  "dangling": dangling})
+            return sys.exit(1 if unposted or dangling else 0)
         print(f"# Trial balance  [{len(unposted) + len(dangling)} out of balance, "
               f"{opening} pages in the opening balance]")
         print(f"  accounts without a posting ({len(unposted)})")
@@ -686,8 +868,20 @@ def main():
             print(f"    {t}")
         return sys.exit(1 if unposted or dangling else 0)
 
+    if a.hats:
+        rep = hats_report(pages)
+        if a.json:
+            return emit({"hats": rep})
+        print(f"# {len(rep)} hats")
+        for h in rep:
+            flag = " own" if h["own"] else ""
+            print(f"  {h['key']:<24} {h['title'][:40]:<40} {h['pages']:>4} pages, {h['active_work']} active{flag}")
+        return
+
     if a.orphans:
         rows = find_orphans(pages, a.include_archive)
+        if a.json:
+            return emit({"orphans": [page_json(fm) for fm in sorted(rows, key=lambda x: x["_path"])]})
         print(f"# Orphan pages ({len(rows)})")
         for fm in sorted(rows, key=lambda x: x["_path"]):
             print(f"  {fm['_path']}  [{fm.get('type','?')}/{fm.get('status','?')}]")
@@ -710,6 +904,10 @@ def main():
 
     if a.search:
         hits = bm25_search(rows, a.search, k=a.limit)
+        if a.json:
+            return emit({"query": a.search, "hits": [
+                dict(page_json(d) if d.get("type") != "log" else {"path": d["_path"], "title": d.get("title", ""), "type": "log"},
+                     score=round(sc, 3), snippet=snippet(d.get("_body", ""), a.search)) for sc, d in hits]})
         print(f"# search {a.search!r}, {len(hits)} of {len(rows)} documents")
         for s, d in hits:
             print(f"  {s:5.2f}  {d['_path']}")
@@ -719,6 +917,9 @@ def main():
     if a.stale:
         out = [(p, stale_reasons(p)) for p in rows]
         out = [(p, r) for p, r in out if r]
+        if a.json:
+            return emit({"date": TODAY, "stale": [dict(page_json(p), reasons=r)
+                                                  for p, r in sorted(out, key=lambda x: x[0]["_path"])]})
         print(f"# Stale / overdue ({len(out)})  [date {TODAY}]")
         for p, r in sorted(out, key=lambda x: x[0]["_path"]):
             print(f"  {p['_path']}  [{p.get('status','?')}]  -> {'; '.join(r)}")
@@ -736,6 +937,8 @@ def main():
                 return (2, str(v))
         rows = sorted(rows, key=key, reverse=a.desc)
 
+    if a.json:
+        return emit({"pages": [dict(page_json(p), reasons=stale_reasons(p)) for p in rows]})
     print(f"# {len(rows)} pages")
     for p in rows:
         bits = [f"[{p.get('type','?')}/{p.get('status','-')}]"]
