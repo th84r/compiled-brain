@@ -10,7 +10,6 @@
       "Edit(inbox/**)",
       "Edit(CLAUDE.md)",
       "Edit(AGENTS.md)",
-      "Edit(.claude/commands/**)",
       "Bash(python3 .claude/scripts/*)",
       "Bash(python3 .claude/hooks/*)",
       "Bash(git status*)",

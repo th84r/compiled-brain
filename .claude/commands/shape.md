@@ -14,7 +14,7 @@ Three rules for the whole run.
 
 Read `wiki/reference/profile.md` first. `/onboard` has already asked about the work, the hats and the language, so confirm those in one line each ("You said ... is that still right?") and ask only the rest. If the profile has `shaped:` with a date, this is a re-run, ask only what has changed and keep everything else.
 
-**Answers given in an app.** If `.claude/onboarding-answers.md` exists, the owner has already answered the nine questions somewhere else, for example in Pacioli for Mac. Read the answers from it, skip the welcome and the questions it answers, and ask only what is missing. An answer marked `(skipped)` keeps the template's default for that part, and the report says so. Once `wiki/reference/profile.md` holds the answers, delete the file.
+**Answers given in an app.** If `.claude/onboarding-answers.md` exists, the owner has already answered the nine questions somewhere else, for example in Pacioli for Mac. Read the answers from it, skip the welcome and the questions it answers, and ask only what is missing. An answer marked `(skipped)` keeps the template's default for that part, and the report says so. The app that wrote the file removes it afterwards, so leave it where it is.
 
 **Start with a short welcome.** Before the first question, tell them in plain words what is about to happen. Something like: "I will ask you nine short questions about your work, it takes about ten minutes. Short answers are fine, and you can say skip and come back to it later. Then I shape the library to fit, check that everything works, and show you how to use it." Assume they may be new to terminals and agents, avoid jargon, and explain any file or term the first time it comes up.
 
@@ -50,7 +50,7 @@ Maps to: what `wiki/cases/` is called in their library, the `type` vocabulary, a
 
 "When you open a page about one of those, what do you need to see? Here is the default: what the situation is, who is involved and what each of them needs, what matters about it, what has happened so far, what happens next, what you do not know yet, and where it all came from. Rename, remove or add."
 
-Maps to: the section template in `/new-case`, and the example page.
+Maps to: `wiki/workflows/page-template.md`, which `/new-case` follows, and the example page.
 
 ### 5. What comes in
 
@@ -94,7 +94,7 @@ Now edit, in this order. Each step names the file and what changes.
 
 3. **`wiki/hats/`.** One router page per hat, using the template in `wiki/hats/README.md`. Delete `example-hat.md`, and replace its line under Hats in `wiki/index.md` with one line per real hat.
 
-4. **`.claude/commands/new-case.md`.** Replace the section template with the sections from answer 4, in their words. If they call the unit of work something other than a case, say so at the top of the command and note that the folder is still `wiki/cases/`, renaming it is possible but touches the scripts.
+4. **`wiki/workflows/page-template.md`.** Replace the sections with those from answer 4, in their words, and say what the unit of work is called from answer 3. If they call it something other than a case, note that the folder is still `wiki/cases/`, renaming it is possible but touches the scripts.
 
 5. **The example.** Delete `wiki/cases/example-talk/`, and any line in `wiki/index.md` that points at it. Write one fictional page in their domain, using the sections from step 4, with invented names and invented numbers. It exists so the dashboard renders something and so the shape is visible. Say in its TL;DR that it is fictional and should be deleted. Give it no `next_action_date`, so it never shows as overdue on the owner's first day.
 

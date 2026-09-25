@@ -17,7 +17,7 @@ It interviews you. Nine questions, one pass, short answers are fine, and the thr
 | What you do and for whom | The opening of `CLAUDE.md` |
 | Your roles, and which ones nobody chases | The hats list, one router page per hat, and a note on which ones nobody chases |
 | Your unit of work and what you call it | The `type` vocabulary and the example |
-| What a page about one should show | The section template in `/new-case` |
+| What a page about one should show | The sections in `wiki/workflows/page-template.md`, which `/new-case` follows |
 | What lands on you in a week | Ingest conventions and naming |
 | What is worth keeping and what is noise | The quality filter, with your examples |
 | What must never leave, and who would attack a document's origin | The confidentiality note and the reason in `voice.md` |

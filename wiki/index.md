@@ -35,6 +35,7 @@ How things are done here. See `workflows/`.
 
 - [workflows/design.md](workflows/design.md), why the library is built this way
 - [workflows/frontmatter-schema.md](workflows/frontmatter-schema.md), the full schema per page type
+- [workflows/page-template.md](workflows/page-template.md), the sections of a page about one piece of work
 - [workflows/self-improvement.md](workflows/self-improvement.md), the loop architecture
 - [workflows/skills-index.md](workflows/skills-index.md), procedures that worked
 - [workflows/voice.md](workflows/voice.md), the writing rules `voice.py` enforces

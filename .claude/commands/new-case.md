@@ -14,21 +14,7 @@ Search `wiki/cases/` and the archive. A revived case is better than a duplicate.
 
 ## 3. Create the structure
 
-`wiki/cases/<short-name>/overview.md` with full frontmatter, a TL;DR line, and these sections:
-
-```
-## Situation            what this is, in a paragraph
-## Who is involved      each person and what they need, with sources
-## What matters         figures, consequences, what changes with the outcome
-## Chronology           dated, append-only
-## Next steps           what happens, who does it, by when
-## Open questions       what we do not know yet
-## Sources
-```
-
-These are the defaults. `/onboard` replaces them with the sections the owner actually needs, in their words. If that has been run, use what it wrote here rather than the list above.
-
-Sub-documents (chronology, preparation, analysis) go in the same folder and do not need full frontmatter.
+`wiki/cases/<short-name>/overview.md` with full frontmatter, a TL;DR line, and the sections in `wiki/workflows/page-template.md`, in the order and words it gives. `/shape` writes them there in the owner's own words. The same page says what the unit of work is called here.
 
 ## 4. Wire it in
 

@@ -16,7 +16,7 @@ Four rules for the whole run.
 
 If `wiki/reference/profile.md` already exists, the library is set up. Say so in one line and offer `/shape` or a first ingest instead.
 
-**Answers given in an app.** If `.claude/onboarding-answers.md` exists, the owner has already answered somewhere else, for example in Pacioli for Mac. Read the answers from it and ask only what is missing. Answers to questions that belong to `/shape` are kept in the file for `/shape`, which deletes it once it has used them. If every answer is there, go straight to Part 2.
+**Answers given in an app.** If `.claude/onboarding-answers.md` exists, the owner has already answered somewhere else, for example in Pacioli for Mac. Read the answers from it and ask only what is missing. The app that wrote the file removes it afterwards, so leave it where it is. If every answer is there, go straight to Part 2.
 
 **Start with a one-line welcome.** "Three short questions, then we put your first documents in and you can ask about them."
 
