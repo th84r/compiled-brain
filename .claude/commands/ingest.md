@@ -40,7 +40,7 @@ Update existing pages according to step 5. Create new pages with correct frontma
 
 ## 7. Log and archive
 
-Add one entry to `wiki/log.md`, headed `## YYYY-MM-DD ingest | title (initials)`, that names every page you created or changed. An unnamed page will show up as out of balance in `fmquery.py --balance`. Move the files from `inbox/pending/` to `inbox/processed/YYYY-MM/`, creating the month folder if needed. Say which files were routed to archive and why. The entry goes in the same commit as the pages it names, so the commit balances on its own. If a figure in the key figures table in `wiki/reference/eval-set.md` changed, write the new value there and move the old one to its was column.
+Add one entry to `wiki/log.md`, headed `## YYYY-MM-DD ingest | title (initials)`, that names every page you created or changed. An unnamed page will show up as out of balance in `fmquery.py --balance`. Move the files from `inbox/pending/` to `inbox/processed/YYYY-MM/`, creating the month folder if needed. When an app runs the ingest and says it files the raw files itself, leave them where they are. Say which files were routed to archive and why. The entry goes in the same commit as the pages it names, so the commit balances on its own. If a figure in the key figures table in `wiki/reference/eval-set.md` changed, write the new value there and move the old one to its was column.
 
 ## 8. Report
 

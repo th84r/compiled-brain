@@ -13,6 +13,7 @@ wiki/status.md
 __pycache__/
 *.pyc
 .claude/settings.local.json
+.claude/onboarding-answers.md
 
 # Obsidian, share vault settings but not the workspace
 .obsidian/workspace*.json

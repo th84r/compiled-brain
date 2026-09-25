@@ -180,7 +180,12 @@ check("permissions allow writing the wiki", "Edit(wiki/**)" in allow)
 # Claude Code reads only Edit(path) rules for files, and they cover every tool that writes one.
 # A Write(path) rule is ignored with a warning at every start, so none may ship.
 check("file rules are Edit rules only", not any(r.startswith("Write(") for r in allow + deny))
-check("permissions allow the library's scripts", "Bash(python3 .claude/scripts/*)" in allow)
+check("permissions allow the library's scripts by name", "Bash(python3 .claude/scripts/fmquery.py *)" in allow
+      and not any(r.startswith("Bash(python3 .claude/scripts/*") for r in allow))
+check("permissions allow no shell command that can write where it likes",
+      not any(r.split("(")[0] == "Bash" and r[5:].split(" ")[0].rstrip("*)") in ("find", "sort", "echo", "cat", "mv", "tee", "cp")
+              for r in allow))
+check("the agent may not change .claude", "Edit(.claude/**)" in deny)
 check("permissions deny the network from the shell", "Bash(curl *)" in deny and "Bash(wget *)" in deny)
 check("permissions deny push and self-editing", any(x.startswith("Bash(git push") for x in deny)
       and "Edit(.claude/settings.json)" in deny)
