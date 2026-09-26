@@ -17,3 +17,7 @@ Hats, quality filter and voice rules still carry the template placeholders. Open
 ## 2026-01-10 new-case | Example talk page opened
 
 Opened `cases/example-talk/` from the committee's invitation. Abstract due 15 February, slides 1 October, co-presenter offered the second half. Delete this entry together with the example page once you have your own.
+
+## 2026-09-26 fix | Eval set, what an assertion may pin
+
+Late posting for facc141, which changed `reference/eval-set.md` without an entry of its own. The page now says that assertions pin facts only, never `status`, `next_action`, `next_action_date`, `review` or `updated`, since those move with ordinary work and marking a next action done would fail the eval.
