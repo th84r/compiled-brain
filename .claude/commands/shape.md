@@ -113,7 +113,7 @@ Now edit, in this order. Each step names the file and what changes.
    ```
    All four must pass. If `--eval` fails, the assertion or the page is wrong, fix it now rather than leaving a failing check on day one. If `--balance` lists a page, add it to the onboard log entry.
 
-10. **Commit.** `git add -A && git commit -m "shape | Library shaped to <name>'s work"`. If git says it does not know who they are, which happens on a machine where git has never been set up, ask for the name and email they want on their own history and set them for this library only with `git config user.name "<name>"` and `git config user.email "<email>"`, then commit again. Their books stay on their machine, so any address will do.
+10. **Commit.** Stage what you changed with `git add` and the paths, then `git commit -m "shape | Library shaped to <name>'s work"` as a separate command. If git says it does not know who they are, which happens on a machine where git has never been set up, ask for the name and email they want on their own history and set them for this library only with `git config user.name "<name>"` and `git config user.email "<email>"`, then commit again. Their books stay on their machine, so any address will do.
 
 ---
 
