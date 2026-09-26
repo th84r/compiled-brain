@@ -6,6 +6,8 @@ Each version is a git tag. What a library made from an earlier one can take over
 
 The eval set and the ingest say what an assertion may pin. Facts only, never `status`, `next_action`, `next_action_date`, `review` or `updated`, which move with ordinary work. A library made earlier can take over the two sentences and remove any assertion on those fields from its own eval set.
 
+`git check-ignore` is allowed, the one read-only git command Claude Code asked about in a week of use.
+
 ## v1.2.7
 
 The loop and the shaping procedure stage the pages they changed by name, and commit as a separate command. Nothing stages everything any more, since another conversation may have work under way in the same library.
