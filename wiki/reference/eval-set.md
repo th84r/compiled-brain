@@ -19,7 +19,7 @@ A good question has one right answer, a source, and would actually be asked. Avo
 
 ## Two kinds of check
 
-**Assertions** are deterministic. A page, a field, an expected value. `fmquery.py --eval` runs them with no model involved, so they can run in CI and they catch a silently changed fact the moment it changes. Use them for the numbers and terms you would be embarrassed to get wrong.
+**Assertions** are deterministic. A page, a field, an expected value. `fmquery.py --eval` runs them with no model involved, so they can run in CI and they catch a silently changed fact the moment it changes. Use them for the numbers and terms you would be embarrassed to get wrong. Assert facts, which change only when the world changes, such as a fee, a deadline in an agreement or a hat. Never assert the fields that move with ordinary work, `status`, `next_action`, `next_action_date`, `review` and `updated`. Marking a next action done would fail the eval on an ordinary day.
 
 **Questions** need a model to answer. `/eval` runs them cold and scores the answers. Use them for the things that require reading and synthesis.
 
